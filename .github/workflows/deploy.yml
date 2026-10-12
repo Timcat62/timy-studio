@@ -1,0 +1,15 @@
+
+name: Deploy Timy Studio
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  deploy:
+    runs-on: [self-hosted, Linux, X64]
+    steps:
+      - name: Deploy latest main
+        run: /usr/local/bin/deploy-timy-studio
