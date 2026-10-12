@@ -1,0 +1,48 @@
+import { NextResponse } from "next/server";
+import { z } from "zod";
+import { adminOrderLink, notifyDiscord } from "@/lib/notify";
+import { addMessage, getAttachments, getMessages, getPublicOrderByToken } from "@/lib/orders";
+import { db } from "@/lib/supabase";
+
+export const runtime = "nodejs";
+export const dynamic = "force-dynamic";
+
+type Ctx = { params: Promise<{ token: string }> };
+
+export async function GET(_req: Request, { params }: Ctx) {
+  const { token } = await params;
+  const order = await getPublicOrderByToken(token);
+  if (!order) return NextResponse.json({ error: "Not found." }, { status: 404 });
+  const [messages, attachments] = await Promise.all([getMessages(order.id), getAttachments(order.id)]);
+  return NextResponse.json({ order, messages, attachments });
+}
+
+const messageSchema = z.object({ body: z.string().trim().min(1).max(4000) });
+
+export async function POST(req: Request, { params }: Ctx) {
+  const { token } = await params;
+  const order = await getPublicOrderByToken(token);
+  if (!order) return NextResponse.json({ error: "Not found." }, { status: 404 });
+
+  const parsed = messageSchema.safeParse(await req.json().catch(() => null));
+  if (!parsed.success) return NextResponse.json({ error: "Write a message first." }, { status: 400 });
+
+  // Throttle: 20 client messages per 10 minutes per order.
+  const since = new Date(Date.now() - 10 * 60 * 1000).toISOString();
+  const { count } = await db()
+    .from("messages")
+    .select("id", { count: "exact", head: true })
+    .eq("order_id", order.id)
+    .eq("sender", "client")
+    .gte("created_at", since);
+  if ((count ?? 0) >= 20) {
+    return NextResponse.json({ error: "Slow down a little. Try again in a few minutes." }, { status: 429 });
+  }
+
+  await addMessage(order.id, "client", parsed.data.body);
+  await db().from("orders").update({ last_client_message_at: new Date().toISOString() }).eq("id", order.id);
+  await notifyDiscord(
+    `${order.name} wrote on their ${order.project_type} order:\n${parsed.data.body.slice(0, 600)}\n${adminOrderLink(order.id)}`,
+  );
+  return NextResponse.json({ ok: true });
+}
