@@ -11,11 +11,12 @@ import { Icon } from "./Icon";
 interface Props {
   maxFiles: number;
   maxFileSizeMB: number;
+  defaultType?: string;
 }
 
 type Phase = "idle" | "sending" | "uploading";
 
-export function BriefForm({ maxFiles, maxFileSizeMB }: Props) {
+export function BriefForm({ maxFiles, maxFileSizeMB, defaultType }: Props) {
   const router = useRouter();
   const startedAt = useRef(Date.now());
   const picker = useRef<HTMLInputElement>(null);
@@ -161,7 +162,7 @@ export function BriefForm({ maxFiles, maxFileSizeMB }: Props) {
           <label className="label" htmlFor="projectType">
             What do you need?
           </label>
-          <select className="select" id="projectType" name="projectType" required defaultValue={projectTypes[0]}>
+          <select className="select" id="projectType" name="projectType" required defaultValue={defaultType ?? projectTypes[0]}>
             {projectTypes.map((t) => (
               <option key={t}>{t}</option>
             ))}

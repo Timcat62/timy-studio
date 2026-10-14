@@ -3,41 +3,59 @@ import { linktreeUrl, links, site } from "@/lib/config";
 
 export function Footer() {
   const social = links.filter((l) => l.group === "social" && l.href);
+  const listen = links.filter((l) => l.group === "listen" && l.href);
+
   return (
     <footer className="site-footer">
       <div className="wrap">
         <div className="site-footer__grid">
+          <p className="site-footer__tag">Cars in places they've never been.</p>
           <div>
-            <p className="wordmark" style={{ color: "var(--text)" }}>
-              {site.name}
-            </p>
-            <p style={{ marginTop: "0.75rem", maxWidth: "36ch" }}>
-              Automotive CGI and 3D animation, plus the music that goes with it.
-            </p>
+            <h3>Studio</h3>
+            <ul>
+              <li>
+                <Link href="/#work">Work</Link>
+              </li>
+              <li>
+                <Link href="/#services">Services</Link>
+              </li>
+              <li>
+                <Link href="/about">About and music</Link>
+              </li>
+              <li>
+                <Link href="/start">Start a project</Link>
+              </li>
+              <li>
+                <a href={`mailto:${site.email}`}>Email</a>
+              </li>
+            </ul>
           </div>
-          <ul className="site-footer__links">
-            {social.map((l) => (
-              <li key={l.label}>
-                <a href={l.href} target="_blank" rel="noopener noreferrer">
-                  {l.label}
+          <div>
+            <h3>Elsewhere</h3>
+            <ul>
+              {[...social, ...listen].map((l) => (
+                <li key={l.label}>
+                  <a href={l.href} target="_blank" rel="noopener noreferrer">
+                    {l.label}
+                  </a>
+                </li>
+              ))}
+              <li>
+                <a href={linktreeUrl} target="_blank" rel="noopener noreferrer">
+                  All links
                 </a>
               </li>
-            ))}
-            <li>
-              <a href={linktreeUrl} target="_blank" rel="noopener noreferrer">
-                All links
-              </a>
-            </li>
-            <li>
-              <a href={`mailto:${site.email}`}>Email</a>
-            </li>
-          </ul>
+            </ul>
+          </div>
         </div>
         <div className="site-footer__small">
           <span>© {new Date().getFullYear()} {site.name}</span>
           <Link href="/legal">Legal and terms</Link>
         </div>
       </div>
+      <span className="site-footer__mark" aria-hidden="true">
+        timy.
+      </span>
     </footer>
   );
 }

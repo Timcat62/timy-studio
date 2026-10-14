@@ -24,25 +24,28 @@ export default async function About() {
   return (
     <>
       <div className="wrap page-head">
-        <h1 className="display">The music and the pictures, from one desk.</h1>
+        <h1 className="display">About and music</h1>
       </div>
 
       <section className="section section--tight" style={{ borderTop: 0 }}>
-        <div className="wrap prose">
-          <p>
-            I'm timy., an independent producer and 3D artist from France. I write atmospheric, cinematic electronic
-            music and Brazilian funk, and I release it myself.
+        <div className="wrap about-cols">
+          <p className="lead">
+            I'm timy., an independent producer and 3D artist from France. Music and pictures come from the same desk.
           </p>
-          <p>
-            Every release gets its own visuals, built in Blender: photoreal cars in places they were never meant to be.
-            That is the look people know from my TikTok, and it is the same craft I now put into client projects.
-          </p>
-          <p>
-            <Link href="/start" className="link-inline">
-              Start a project
-            </Link>{" "}
-            if you want that world for your own car, brand or release.
-          </p>
+          <div className="prose">
+            <p>
+              I write atmospheric, cinematic electronic music and Brazilian funk, and I release it myself.
+            </p>
+            <p>
+              Every release gets its own visuals, built in Blender: photoreal cars in places they were never meant to be.
+              That is the look people know from my TikTok, and it is the same craft I now put into client projects.
+            </p>
+            <p>
+              <Link href="/start" className="link-arrow" style={{ color: "var(--text)" }}>
+                Start a project <Icon name="arrow-up-right" />
+              </Link>
+            </p>
+          </div>
         </div>
       </section>
 

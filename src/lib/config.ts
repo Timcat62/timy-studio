@@ -40,26 +40,62 @@ export const works: { url: string; title?: string; thumb?: string }[] = [];
 /** Optional looping showreel for the hero (put the file in /public/media/). Leave empty to keep the plain hero. */
 export const heroReel = ""; // e.g. "/media/reel.mp4"
 
-export const services = [
+/**
+ * The service rows on the homepage. `type` must match an entry of projectTypes below:
+ * it preselects that type on the brief form. `media` is optional: a short looping video (.mp4/.webm)
+ * or an image from /public (e.g. "/media/car-film.mp4") that plays when the row is hovered.
+ */
+export const services: { name: string; text: string; delivery: string; type: string; media?: string }[] = [
   {
     name: "Car films",
     text: "A fully CG film of a car for a launch, a brand or an artist. Modelling clean-up, lighting, camera work, grade and sound sync.",
     delivery: "Landscape and vertical masters",
+    type: "Car film",
   },
   {
     name: "Social cuts",
     text: "Short vertical loops and teasers made for TikTok, Reels and Shorts, from your car or from a model of mine.",
     delivery: "Short vertical edits",
+    type: "Social cuts",
   },
   {
     name: "Stills",
     text: "Photoreal renders of a car in a studio or somewhere it should not be. For covers, ads and catalogues.",
     delivery: "Single frames at print size",
+    type: "Stills",
   },
   {
     name: "Visuals for music",
     text: "Covers, visualizers and promo loops for a release, built around the track.",
     delivery: "Loops, visualizers and covers",
+    type: "Visuals for music",
+  },
+];
+
+export const faq = [
+  {
+    q: "When do I pay?",
+    a: "Only after we've talked it through and agreed on a final price. I send the price in your project chat and you pay securely through Stripe. Nothing is charged when you send a brief.",
+  },
+  {
+    q: "What can I send you?",
+    a: "Reference images, logos, brand guidelines, audio, and 3D models of the car if you have them: up to 5 files of 50 MB each on the form. For anything larger, share a link. No model? Tell me the car and we'll see what's possible.",
+  },
+  {
+    q: "How do we talk during the project?",
+    a: "Every brief gets a private page with a chat. You receive the link by email, and you can always reach me by email or on Instagram too.",
+  },
+  {
+    q: "How are timing and revisions handled?",
+    a: "Both are agreed in the chat before you pay, based on the scope of the job.",
+  },
+  {
+    q: "Which payment methods can I use?",
+    a: "Stripe shows what is available for your country at checkout, typically cards and wallets such as Apple Pay and Google Pay.",
+  },
+  {
+    q: "Can I use the final files commercially?",
+    a: "Yes, for the purpose we agree on together. The details are written down in the chat and in the terms.",
   },
 ];
 

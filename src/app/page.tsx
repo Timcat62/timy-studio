@@ -1,6 +1,9 @@
 import Link from "next/link";
+import { Faq } from "@/components/Faq";
 import { Icon } from "@/components/Icon";
-import { heroReel, links, services, site } from "@/lib/config";
+import { ServiceRow } from "@/components/ServiceRow";
+import { Ticker } from "@/components/Ticker";
+import { faq, heroReel, links, services, site } from "@/lib/config";
 import { getWorks } from "@/lib/tiktok";
 
 const tiktok = links.find((l) => l.label === "TikTok")?.href ?? `https://www.tiktok.com/@${site.handle}`;
@@ -8,10 +11,7 @@ const tiktok = links.find((l) => l.label === "TikTok")?.href ?? `https://www.tik
 const steps = [
   { title: "Send a brief", text: "Describe the project, your budget and any files or references. It takes about five minutes." },
   { title: "Talk it through", text: "We chat on a private page made for your project. I ask questions, you adjust the idea." },
-  {
-    title: "Agree a price, then pay",
-    text: "I propose a final price. You only pay once you accept it, securely through Stripe.",
-  },
+  { title: "Agree a price, then pay", text: "I propose a final price. You only pay once you accept it, securely through Stripe." },
   { title: "Receive your files", text: "I produce the work and send the final files through your project page." },
 ];
 
@@ -21,29 +21,45 @@ export default async function Home() {
   return (
     <>
       <section className="hero">
-        {heroReel ? <video className="hero__reel" src={heroReel} autoPlay muted loop playsInline aria-hidden="true" /> : null}
+        <div className="hero__stage" aria-hidden="true" />
+        {heroReel ? (
+          <>
+            <video className="hero__reel" src={heroReel} autoPlay muted loop playsInline aria-hidden="true" />
+            <div className="hero__shade" aria-hidden="true" />
+          </>
+        ) : null}
         <div className="hero__light" aria-hidden="true" />
         <div className="wrap">
-          <h1 className="display">Cars in places they've never been.</h1>
-          <p className="hero__sub">
-            Automotive CGI and 3D animation, built in Blender. Photoreal car films, social cuts and stills for brands,
-            creators and artists.
-          </p>
-          <div className="hero__actions">
-            <Link href="/start" className="btn btn--primary">
-              Start a project
-            </Link>
-            <Link href="#work" className="btn btn--ghost">
-              See the work
-            </Link>
+          <div className="hero__body">
+            <h1 className="display">Cars in places they've never been.</h1>
+            <div className="hero__side">
+              <p className="hero__sub">
+                Automotive CGI and 3D animation, built in Blender. Photoreal car films, social cuts and stills for brands,
+                creators and artists.
+              </p>
+              <Link href="/start" className="btn btn--primary">
+                Start a project <Icon name="arrow" />
+              </Link>
+            </div>
+          </div>
+          <div className="hero__meta">
+            <span className="caps">Automotive CGI / 3D animation</span>
+            <span className="caps">@{site.handle}</span>
           </div>
         </div>
       </section>
 
+      <Ticker items={[...services.map((s) => s.name), "Built in Blender"]} />
+
       <section id="work" className="section">
         <div className="wrap">
-          <h2 className="h2">Recent work</h2>
-          <p className="lede">Each piece opens the original video on TikTok.</p>
+          <div className="section-head">
+            <div className="section-head__main">
+              <h2 className="h2">Recent work</h2>
+              <p className="lede">Each piece opens the original video on TikTok.</p>
+            </div>
+            <p className="caps section-head__meta">01 / Work</p>
+          </div>
 
           {works.length > 0 ? (
             <>
@@ -56,21 +72,23 @@ export default async function Home() {
                         <Icon name="play" />
                       </span>
                     </div>
-                    <p className="work-card__title">{w.title}</p>
+                    <div className="work-card__cap">
+                      <p className="work-card__title">{w.title}</p>
+                    </div>
                   </a>
                 ))}
               </div>
               <p className="work-more">
-                <a className="btn btn--ghost" href={tiktok} target="_blank" rel="noopener noreferrer">
-                  More on TikTok <Icon name="external" />
+                <a className="link-arrow" href={tiktok} target="_blank" rel="noopener noreferrer">
+                  More on TikTok <Icon name="arrow-up-right" />
                 </a>
               </p>
             </>
           ) : (
             <div className="work-empty">
-              <p style={{ maxWidth: "42ch" }}>New renders land on TikTok first. Follow @{site.handle} to see the latest.</p>
+              <p>New renders land on TikTok first. Follow @{site.handle} to see the latest.</p>
               <a className="btn btn--primary" href={tiktok} target="_blank" rel="noopener noreferrer">
-                Watch on TikTok <Icon name="external" />
+                Watch on TikTok <Icon name="arrow-up-right" />
               </a>
             </div>
           )}
@@ -79,14 +97,16 @@ export default async function Home() {
 
       <section id="services" className="section">
         <div className="wrap">
-          <h2 className="h2">What I make</h2>
+          <div className="section-head">
+            <div className="section-head__main">
+              <h2 className="h2">What I make</h2>
+              <p className="lede">Pick the closest one and the brief form opens with it already selected.</p>
+            </div>
+            <p className="caps section-head__meta">02 / Services</p>
+          </div>
           <ul className="services">
-            {services.map((s) => (
-              <li key={s.name} className="service">
-                <h3>{s.name}</h3>
-                <p>{s.text}</p>
-                <p className="service__delivery">{s.delivery}</p>
-              </li>
+            {services.map((s, i) => (
+              <ServiceRow key={s.name} index={i} {...s} />
             ))}
           </ul>
         </div>
@@ -94,8 +114,13 @@ export default async function Home() {
 
       <section className="section">
         <div className="wrap">
-          <h2 className="h2">How a project works</h2>
-          <p className="lede">You are never asked to pay before we have agreed on a price together.</p>
+          <div className="section-head">
+            <div className="section-head__main">
+              <h2 className="h2">How a project works</h2>
+              <p className="lede">You are never asked to pay before we have agreed on a price together.</p>
+            </div>
+            <p className="caps section-head__meta">03 / Process</p>
+          </div>
           <ol className="steps">
             {steps.map((s) => (
               <li key={s.title}>
@@ -104,6 +129,18 @@ export default async function Home() {
               </li>
             ))}
           </ol>
+        </div>
+      </section>
+
+      <section className="section">
+        <div className="wrap">
+          <div className="section-head">
+            <div className="section-head__main">
+              <h2 className="h2">Questions</h2>
+            </div>
+            <p className="caps section-head__meta">04 / Inquiries</p>
+          </div>
+          <Faq items={faq} />
         </div>
       </section>
 
@@ -116,19 +153,19 @@ export default async function Home() {
             </p>
           </div>
           <div className="split__actions">
-            <Link href="/about" className="btn btn--ghost">
-              About and music
+            <Link href="/about" className="link-arrow">
+              About and music <Icon name="arrow-up-right" />
             </Link>
           </div>
         </div>
       </section>
 
-      <section className="band">
+      <section className="cta">
         <div className="wrap">
           <h2 className="display">Got a car and an idea?</h2>
           <p>Send a brief. There's nothing to pay now: we talk first and agree on a price together.</p>
-          <Link href="/start" className="btn btn--light">
-            Start a project
+          <Link href="/start" className="btn btn--primary">
+            Start a project <Icon name="arrow" />
           </Link>
         </div>
       </section>
