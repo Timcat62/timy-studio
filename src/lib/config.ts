@@ -89,6 +89,13 @@ export const services: { name: string; text: string; delivery: string; type: str
   },
 ];
 
+export const steps = [
+  { title: "Send a brief", text: "Describe the project, your budget and any files or references. It takes about five minutes." },
+  { title: "Talk it through", text: "We chat on a private page made for your project. I ask questions, you adjust the idea." },
+  { title: "Agree a price, then pay", text: "I propose a final price. You only pay once you accept it, securely through Stripe." },
+  { title: "Receive your files", text: "I produce the work and send the final files through your project page." },
+];
+
 export const faq = [
   {
     q: "When do I pay?",

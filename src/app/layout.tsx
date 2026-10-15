@@ -2,6 +2,7 @@ import "@fontsource-variable/archivo/wdth.css";
 import "./globals.css";
 import type { Metadata, Viewport } from "next";
 import { Footer } from "@/components/Footer";
+import { GlassPointer } from "@/components/GlassPointer";
 import { Header } from "@/components/Header";
 import { site } from "@/lib/config";
 import { siteUrl } from "@/lib/format";
@@ -30,6 +31,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   return (
     <html lang="en">
       <body>
+        <GlassPointer />
         <Header />
         <main>{children}</main>
         <Footer />

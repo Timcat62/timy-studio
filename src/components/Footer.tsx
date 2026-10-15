@@ -7,7 +7,7 @@ export function Footer() {
     <footer className="site-footer">
       <div className="wrap">
         <div className="site-footer__grid">
-          <p className="site-footer__tag">Cars in places they've never been.</p>
+          <p className="site-footer__tag">Automotive CGI and 3D animation.</p>
           <div>
             <h3>Studio</h3>
             <ul>
@@ -16,6 +16,9 @@ export function Footer() {
               </li>
               <li>
                 <Link href="/#services">Services</Link>
+              </li>
+              <li>
+                <Link href="/studio">Studio</Link>
               </li>
               <li>
                 <Link href="/about">About and music</Link>

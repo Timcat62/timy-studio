@@ -3,21 +3,14 @@ import { Faq } from "@/components/Faq";
 import { Icon } from "@/components/Icon";
 import { LiteYouTube } from "@/components/LiteYouTube";
 import { ServiceRow } from "@/components/ServiceRow";
-import { Ticker } from "@/components/Ticker";
-import { faq, heroReel, links, services, site } from "@/lib/config";
+import { Strip } from "@/components/Strip";
+import { faq, heroReel, links, services, site, steps } from "@/lib/config";
 import { getWorks } from "@/lib/works";
 
 const tiktok = links.find((l) => l.label === "TikTok")?.href ?? `https://www.tiktok.com/@${site.handle}`;
 const youtube = links.find((l) => l.label === "YouTube")?.href ?? "";
 
 const srcSet = (name: string, widths: number[]) => widths.map((w) => `/images/${name}-${w}.jpg ${w}w`).join(", ");
-
-const steps = [
-  { title: "Send a brief", text: "Describe the project, your budget and any files or references. It takes about five minutes." },
-  { title: "Talk it through", text: "We chat on a private page made for your project. I ask questions, you adjust the idea." },
-  { title: "Agree a price, then pay", text: "I propose a final price. You only pay once you accept it, securely through Stripe." },
-  { title: "Receive your files", text: "I produce the work and send the final files through your project page." },
-];
 
 export default async function Home() {
   const works = await getWorks();
@@ -42,25 +35,29 @@ export default async function Home() {
         <div className="hero__light" aria-hidden="true" />
         <div className="wrap">
           <div className="hero__body">
-            <h1 className="display">Cars in places they've never been.</h1>
+            <h1 className="display">Automotive CGI studio.</h1>
             <div className="hero__side">
               <p className="hero__sub">
-                Automotive CGI and 3D animation, built in Blender. Photoreal car films, social cuts and stills for brands,
-                creators and artists.
+                Photoreal car films, social cuts and stills, built in Blender for brands, creators and artists.
               </p>
-              <Link href="/start" className="btn btn--primary">
-                Start a project <Icon name="arrow" />
-              </Link>
+              <div className="hero__buttons">
+                <Link href="/start" className="btn btn--primary">
+                  Start a project <Icon name="arrow" />
+                </Link>
+                <Link href="/studio" className="btn btn--ghost">
+                  Explore the studio
+                </Link>
+              </div>
             </div>
           </div>
           <div className="hero__meta">
-            <span className="caps">Automotive CGI / 3D animation</span>
+            <span className="caps">Independent studio / Built in Blender</span>
             <span className="caps">@{site.handle}</span>
           </div>
         </div>
       </section>
 
-      <Ticker items={[...services.map((s) => s.name), "Built in Blender"]} />
+      <Strip items={services.map((s) => s.name)} />
 
       <section id="work" className="section">
         <div className="wrap">
