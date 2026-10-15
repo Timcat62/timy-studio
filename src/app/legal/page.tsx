@@ -48,7 +48,7 @@ export default function Legal() {
           <p>
             I store your name, email, brief, files and messages only to handle your request and to keep a record of the
             project, for [duration] after it ends. They are hosted with Supabase. Payments are processed by Stripe, which
-            handles your card data; I never see it. Fonts are served from this site, and no advertising trackers are used.
+            handles your card data; I never see it. Fonts are served from this site, and no advertising trackers are used. Videos are YouTube embeds in privacy-enhanced mode: they only load from YouTube when you press play, although the preview images come from YouTube's servers.
             To access or delete your data, write to <a href={`mailto:${site.email}`}>{site.email}</a>.
           </p>
         </div>

@@ -3,7 +3,7 @@ import { NextResponse } from "next/server";
 import { z } from "zod";
 import { budgets, maxFileSizeMB, maxFiles, projectTypes } from "@/lib/config";
 import { safeFilename } from "@/lib/format";
-import { adminOrderLink, notifyDiscord, orderLink, sendEmail } from "@/lib/notify";
+import { adminEmail, adminOrderLink, notifyDiscord, orderLink, sendEmail } from "@/lib/notify";
 import { addMessage } from "@/lib/orders";
 import { BUCKET, db } from "@/lib/supabase";
 
@@ -118,7 +118,7 @@ export async function POST(req: Request) {
     `${data.files.length} file(s)\n${adminOrderLink(order.id)}`;
   await Promise.all([
     notifyDiscord(adminText),
-    process.env.ADMIN_EMAIL ? sendEmail(process.env.ADMIN_EMAIL, `New brief: ${data.name}`, adminText) : null,
+    sendEmail(adminEmail(), `New brief: ${data.name}`, adminText, data.email),
     sendEmail(
       data.email,
       "Your brief to timy. is in",

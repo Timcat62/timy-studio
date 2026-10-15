@@ -2,7 +2,7 @@ import { NextResponse } from "next/server";
 import { z } from "zod";
 import { isAdmin } from "@/lib/admin-auth";
 import { formatMoney } from "@/lib/format";
-import { notifyDiscord, orderLink, sendEmail } from "@/lib/notify";
+import { adminEmail, notifyDiscord, orderLink, sendEmail } from "@/lib/notify";
 import { addMessage, isUuid, loadAdminState } from "@/lib/orders";
 import { db } from "@/lib/supabase";
 import type { OrderStatus } from "@/lib/types";
@@ -51,27 +51,22 @@ export async function POST(req: Request, { params }: Ctx) {
 
   const { data: order } = await db()
     .from("orders")
-    .select("id,token,name,email,status,quote_currency,client_notified_at,paid_at")
+    .select("id,token,name,email,status,quote_currency,paid_at")
     .eq("id", id)
     .maybeSingle();
   if (!order) return NextResponse.json({ error: "Not found." }, { status: 404 });
 
   if (input.action === "message") {
     await addMessage(id, "admin", input.body);
-    const update: Record<string, unknown> = {};
-    if (order.status === "new") update.status = "discussing";
+    if (order.status === "new") await db().from("orders").update({ status: "discussing" }).eq("id", id);
 
-    // Email the client about a new reply, at most once every 10 minutes.
-    const last = order.client_notified_at ? Date.parse(order.client_notified_at) : 0;
-    if (Date.now() - last > 10 * 60 * 1000) {
-      const sent = await sendEmail(
-        order.email,
-        "New message from timy.",
-        `Hi ${order.name},\n\nI replied to your project. Read and answer here:\n\n${orderLink(order.token)}\n\ntimy.`,
-      );
-      if (sent) update.client_notified_at = new Date().toISOString();
-    }
-    if (Object.keys(update).length) await db().from("orders").update(update).eq("id", id);
+    // Email the client every reply, with the message itself. Their answer to the email reaches you.
+    await sendEmail(
+      order.email,
+      "New message from timy.",
+      `Hi ${order.name},\n\n${input.body}\n\nReply on your project page: ${orderLink(order.token)}\n\ntimy.`,
+      adminEmail(),
+    );
     return NextResponse.json({ ok: true });
   }
 

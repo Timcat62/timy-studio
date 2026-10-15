@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import { z } from "zod";
-import { adminOrderLink, notifyDiscord } from "@/lib/notify";
+import { adminEmail, adminOrderLink, notifyDiscord, sendEmail } from "@/lib/notify";
 import { addMessage, getAttachments, getMessages, getPublicOrderByToken } from "@/lib/orders";
 import { db } from "@/lib/supabase";
 
@@ -41,8 +41,18 @@ export async function POST(req: Request, { params }: Ctx) {
 
   await addMessage(order.id, "client", parsed.data.body);
   await db().from("orders").update({ last_client_message_at: new Date().toISOString() }).eq("id", order.id);
-  await notifyDiscord(
-    `${order.name} wrote on their ${order.project_type} order:\n${parsed.data.body.slice(0, 600)}\n${adminOrderLink(order.id)}`,
-  );
+
+  // Tell the owner: Discord ping plus an email with the message itself. Replying to the email reaches the client.
+  const { data: contact } = await db().from("orders").select("email").eq("id", order.id).maybeSingle();
+  const link = adminOrderLink(order.id);
+  await Promise.all([
+    notifyDiscord(`${order.name} wrote on their ${order.project_type} order:\n${parsed.data.body.slice(0, 600)}\n${link}`),
+    sendEmail(
+      adminEmail(),
+      `New message from ${order.name}`,
+      `${order.name} (${contact?.email ?? "no email"}) wrote on their ${order.project_type} project:\n\n${parsed.data.body}\n\nAnswer on the site: ${link}`,
+      contact?.email ?? undefined,
+    ),
+  ]);
   return NextResponse.json({ ok: true });
 }

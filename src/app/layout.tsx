@@ -16,8 +16,9 @@ export const metadata: Metadata = {
     url: siteUrl(),
     siteName: "timy.",
     type: "website",
+    images: [{ url: "/og.jpg", width: 1200, height: 630, alt: "A car floating in orbit above the Earth" }],
   },
-  twitter: { card: "summary_large_image" },
+  twitter: { card: "summary_large_image", images: ["/og.jpg"] },
 };
 
 export const viewport: Viewport = {

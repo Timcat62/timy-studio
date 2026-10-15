@@ -1,41 +1,58 @@
+import type { BrandName } from "./brand-icons";
+
 // Everything you are likely to edit on the site lives in this file.
 
 export const site = {
   name: "timy.",
   handle: "timyedit",
   domain: "timy.studio",
-  email: "contact.timyedit@gmail.com",
+  email: "contact@timy.studio",
   description:
     "Automotive CGI and 3D animation. Photoreal car films, social cuts and stills, built in Blender.",
 };
 
-/** Links shown in the footer, on the About page and in the Links section. Entries with an empty href are hidden. */
-export const links = [
-  { label: "TikTok", href: "https://www.tiktok.com/@timyedit", group: "social" },
-  { label: "Instagram", href: "https://www.instagram.com/timyedit", group: "social" },
-  { label: "YouTube", href: "https://www.youtube.com/@timyedits", group: "social" },
-  // Add the exact URLs from your Linktree for these two:
-  { label: "SoundCloud", href: "", group: "listen" },
-  { label: "Spotify", href: "", group: "listen" },
-  { label: "Apple Music", href: "http://music.apple.com/us/artist/timy/1882198272", group: "listen" },
-  { label: "3D Hub (Discord)", href: "https://discord.gg/3dhub", group: "community" },
+/**
+ * Your links. Entries with an icon are shown as small logos (footer and About page); entries without
+ * an icon are shown as text. Entries with an empty href are hidden.
+ */
+export const links: { label: string; href: string; group: string; icon: BrandName | null }[] = [
+  { label: "TikTok", href: "https://www.tiktok.com/@timyedit", group: "social", icon: "tiktok" },
+  { label: "Instagram", href: "https://www.instagram.com/timyedit", group: "social", icon: "instagram" },
+  { label: "YouTube", href: "https://www.youtube.com/@timyedits", group: "social", icon: "youtube" },
+  // Replace with your artist page, e.g. https://open.spotify.com/artist/<id> (this default opens a search for "timy.")
+  { label: "Spotify", href: "https://open.spotify.com/search/timy.", group: "listen", icon: "spotify" },
+  // Add the URL of your SoundCloud profile to show its logo:
+  { label: "SoundCloud", href: "", group: "listen", icon: "soundcloud" },
+  { label: "Apple Music", href: "http://music.apple.com/us/artist/timy/1882198272", group: "listen", icon: "applemusic" },
+  { label: "3D Hub (Discord)", href: "https://discord.gg/3dhub", group: "community", icon: "discord" },
   {
     label: "ProRender Cloud, $20 credit",
     href: "https://prorendercloud.com/sign-up?promo=timy20",
     group: "tools",
+    icon: null,
   },
-] as const;
+];
 
 export const linktreeUrl = "https://linktr.ee/timyedit";
 
 /**
- * Your TikTok showcase. Paste the full URL of each video.
- * Thumbnails and titles are fetched automatically from TikTok (oEmbed).
- * You can override either one, or use a local image in /public/work/.
- * Example:
- *   { url: "https://www.tiktok.com/@timyedit/video/7300000000000000000", title: "Bordeaux coupe, salt flat", thumb: "/work/coupe.jpg" }
+ * Your showcase. Paste the full URL of each video.
+ * - YouTube Shorts / videos: shown as click-to-play embeds (nothing from YouTube loads until a visitor presses play).
+ * - Anything else (TikTok, Instagram): shown as a card that opens the video in a new tab; for TikTok the
+ *   thumbnail and title are fetched automatically, and you can override them with `title` / `thumb`.
  */
-export const works: { url: string; title?: string; thumb?: string }[] = [];
+export const works: { url: string; title?: string; thumb?: string }[] = [
+  { url: "https://www.youtube.com/shorts/NaR4L0-baXg" },
+  { url: "https://www.youtube.com/shorts/lI13MS9YnOk" },
+  { url: "https://www.youtube.com/shorts/znob-P5k22Q" },
+  { url: "https://www.youtube.com/shorts/EsL0pJllq9o" },
+  { url: "https://www.youtube.com/shorts/duW_oiJKw44" },
+  { url: "https://www.youtube.com/shorts/QMl4HS9x_hA" },
+  { url: "https://www.youtube.com/shorts/URLE88owFlo" },
+  { url: "https://www.youtube.com/shorts/w2jyPkwYc60" },
+  { url: "https://www.youtube.com/shorts/HfSrwJAI-kc" },
+  { url: "https://www.youtube.com/shorts/bmJBvJkbVNI" },
+];
 
 /** Optional looping showreel for the hero (put the file in /public/media/). Leave empty to keep the plain hero. */
 export const heroReel = ""; // e.g. "/media/reel.mp4"
@@ -121,6 +138,14 @@ export const maxFileSizeMB = 50; // Supabase free plan allows 50 MB per file
 
 /** Apple Music artist IDs whose releases are shown on the About page (find the ID at the end of the artist URL). */
 export const appleArtistIds = ["1882198272"]; // add the IDs of your other artist names here
+
+/**
+ * Your Spotify artist ID (the part after /artist/ in your Spotify URL). Optional.
+ * With SPOTIFY_CLIENT_ID and SPOTIFY_CLIENT_SECRET set on the server (free, from developer.spotify.com),
+ * your releases come straight from Spotify, with direct album links. Without them, covers come from
+ * Apple Music and each cover links to a Spotify search for that release.
+ */
+export const spotifyArtistId = "";
 
 /** Shown if the Apple Music lookup is unavailable. */
 export const releasesFallback: { title: string; year?: string; art?: string; href?: string }[] = [];

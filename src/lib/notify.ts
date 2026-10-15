@@ -1,3 +1,4 @@
+import { site } from "./config";
 import { siteUrl } from "./format";
 
 /** Posts to your Discord channel. Does nothing if DISCORD_WEBHOOK_URL is not set. */
@@ -15,8 +16,13 @@ export async function notifyDiscord(content: string) {
   }
 }
 
+/** Where new briefs and new client messages are emailed. ADMIN_EMAIL overrides the default (contact@timy.studio). */
+export function adminEmail() {
+  return process.env.ADMIN_EMAIL || site.email;
+}
+
 /** Sends an email through Resend. Does nothing if RESEND_API_KEY / MAIL_FROM are not set. */
-export async function sendEmail(to: string, subject: string, text: string) {
+export async function sendEmail(to: string, subject: string, text: string, replyTo?: string) {
   const key = process.env.RESEND_API_KEY;
   const from = process.env.MAIL_FROM;
   if (!key || !from || !to) return false;
@@ -24,7 +30,7 @@ export async function sendEmail(to: string, subject: string, text: string) {
     const res = await fetch("https://api.resend.com/emails", {
       method: "POST",
       headers: { Authorization: `Bearer ${key}`, "Content-Type": "application/json" },
-      body: JSON.stringify({ from, to, subject, text }),
+      body: JSON.stringify({ from, to, subject, text, ...(replyTo ? { reply_to: replyTo } : {}) }),
     });
     if (!res.ok) console.error("Resend error", res.status, await res.text());
     return res.ok;

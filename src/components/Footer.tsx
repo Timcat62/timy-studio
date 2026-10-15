@@ -1,10 +1,8 @@
 import Link from "next/link";
-import { linktreeUrl, links, site } from "@/lib/config";
+import { site } from "@/lib/config";
+import { SocialLinks } from "./SocialLinks";
 
 export function Footer() {
-  const social = links.filter((l) => l.group === "social" && l.href);
-  const listen = links.filter((l) => l.group === "listen" && l.href);
-
   return (
     <footer className="site-footer">
       <div className="wrap">
@@ -25,27 +23,11 @@ export function Footer() {
               <li>
                 <Link href="/start">Start a project</Link>
               </li>
-              <li>
-                <a href={`mailto:${site.email}`}>Email</a>
-              </li>
             </ul>
           </div>
           <div>
             <h3>Elsewhere</h3>
-            <ul>
-              {[...social, ...listen].map((l) => (
-                <li key={l.label}>
-                  <a href={l.href} target="_blank" rel="noopener noreferrer">
-                    {l.label}
-                  </a>
-                </li>
-              ))}
-              <li>
-                <a href={linktreeUrl} target="_blank" rel="noopener noreferrer">
-                  All links
-                </a>
-              </li>
-            </ul>
+            <SocialLinks />
           </div>
         </div>
         <div className="site-footer__small">

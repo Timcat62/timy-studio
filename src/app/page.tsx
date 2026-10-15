@@ -1,12 +1,16 @@
 import Link from "next/link";
 import { Faq } from "@/components/Faq";
 import { Icon } from "@/components/Icon";
+import { LiteYouTube } from "@/components/LiteYouTube";
 import { ServiceRow } from "@/components/ServiceRow";
 import { Ticker } from "@/components/Ticker";
 import { faq, heroReel, links, services, site } from "@/lib/config";
-import { getWorks } from "@/lib/tiktok";
+import { getWorks } from "@/lib/works";
 
 const tiktok = links.find((l) => l.label === "TikTok")?.href ?? `https://www.tiktok.com/@${site.handle}`;
+const youtube = links.find((l) => l.label === "YouTube")?.href ?? "";
+
+const srcSet = (name: string, widths: number[]) => widths.map((w) => `/images/${name}-${w}.jpg ${w}w`).join(", ");
 
 const steps = [
   { title: "Send a brief", text: "Describe the project, your budget and any files or references. It takes about five minutes." },
@@ -22,12 +26,19 @@ export default async function Home() {
     <>
       <section className="hero">
         <div className="hero__stage" aria-hidden="true" />
+        <img
+          className="hero__img"
+          src="/images/audi-1920.jpg"
+          srcSet={srcSet("audi", [1280, 1920, 2560])}
+          sizes="100vw"
+          alt=""
+          fetchPriority="high"
+          decoding="async"
+        />
         {heroReel ? (
-          <>
-            <video className="hero__reel" src={heroReel} autoPlay muted loop playsInline aria-hidden="true" />
-            <div className="hero__shade" aria-hidden="true" />
-          </>
+          <video className="hero__reel" src={heroReel} autoPlay muted loop playsInline aria-hidden="true" />
         ) : null}
+        <div className="hero__shade" aria-hidden="true" />
         <div className="hero__light" aria-hidden="true" />
         <div className="wrap">
           <div className="hero__body">
@@ -56,7 +67,7 @@ export default async function Home() {
           <div className="section-head">
             <div className="section-head__main">
               <h2 className="h2">Recent work</h2>
-              <p className="lede">Each piece opens the original video on TikTok.</p>
+              <p className="lede">Press play to watch here. Nothing loads from YouTube until you do.</p>
             </div>
             <p className="caps section-head__meta">01 / Work</p>
           </div>
@@ -64,23 +75,32 @@ export default async function Home() {
           {works.length > 0 ? (
             <>
               <div className="work-grid">
-                {works.map((w) => (
-                  <a key={w.url} className="work-card" href={w.url} target="_blank" rel="noopener noreferrer">
-                    <div className="work-card__media">
-                      {w.thumb ? <img src={w.thumb} alt="" loading="lazy" referrerPolicy="no-referrer" /> : null}
-                      <span className="work-card__play">
-                        <Icon name="play" />
-                      </span>
-                    </div>
-                    <div className="work-card__cap">
-                      <p className="work-card__title">{w.title}</p>
-                    </div>
-                  </a>
-                ))}
+                {works.map((w, i) =>
+                  w.kind === "youtube" ? (
+                    <LiteYouTube key={w.id} id={w.id} title={w.title} url={w.url} index={i} />
+                  ) : (
+                    <a key={w.url} className="work-card" href={w.url} target="_blank" rel="noopener noreferrer">
+                      <div className="work-card__media">
+                        {w.thumb ? <img src={w.thumb} alt="" loading="lazy" referrerPolicy="no-referrer" /> : null}
+                        <span className="work-card__play">
+                          <Icon name="play" />
+                        </span>
+                      </div>
+                      <div className="work-card__cap">
+                        <p className="work-card__title">{w.title}</p>
+                      </div>
+                    </a>
+                  ),
+                )}
               </div>
               <p className="work-more">
-                <a className="link-arrow" href={tiktok} target="_blank" rel="noopener noreferrer">
-                  More on TikTok <Icon name="arrow-up-right" />
+                {youtube ? (
+                  <a className="link-arrow" href={youtube} target="_blank" rel="noopener noreferrer">
+                    More on YouTube <Icon name="arrow-up-right" />
+                  </a>
+                ) : null}{" "}
+                <a className="link-arrow" href={tiktok} target="_blank" rel="noopener noreferrer" style={{ marginLeft: "1.5rem" }}>
+                  and TikTok <Icon name="arrow-up-right" />
                 </a>
               </p>
             </>
@@ -161,12 +181,24 @@ export default async function Home() {
       </section>
 
       <section className="cta">
-        <div className="wrap">
-          <h2 className="display">Got a car and an idea?</h2>
-          <p>Send a brief. There's nothing to pay now: we talk first and agree on a price together.</p>
-          <Link href="/start" className="btn btn--primary">
-            Start a project <Icon name="arrow" />
-          </Link>
+        <img
+          className="cta__img"
+          src="/images/space-1920.jpg"
+          srcSet={srcSet("space", [1280, 1920, 2560])}
+          sizes="100vw"
+          alt=""
+          loading="lazy"
+          decoding="async"
+        />
+        <div className="cta__shade" aria-hidden="true" />
+        <div className="wrap cta__body">
+          <div className="cta__text">
+            <h2 className="display">Got a car and an idea?</h2>
+            <p>Send a brief. There's nothing to pay now: we talk first and agree on a price together.</p>
+            <Link href="/start" className="btn btn--primary">
+              Start a project <Icon name="arrow" />
+            </Link>
+          </div>
         </div>
       </section>
     </>
