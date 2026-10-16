@@ -19,7 +19,7 @@ export const site = {
  * Spotify. Paste your artist page and the link of each release (in the Spotify app: ··· > Share > Copy link).
  * Each cover on the About page opens its own link; a release without a link opens your artist page.
  */
-export const spotifyArtistUrl = ""; // e.g. https://open.spotify.com/artist/xxxxxxxxxxxxxxxxxxxxxx
+export const spotifyArtistUrl = "https://open.spotify.com/artist/7DkvkYIZfVZa2fl5kaRD7a"; // e.g. https://open.spotify.com/artist/xxxxxxxxxxxxxxxxxxxxxx
 export const spotifyReleases: Record<string, string> = {
   HALO: "https://open.spotify.com/album/3lL9z243aCKmeMQ3bOTMDP",
   ATREY: "https://open.spotify.com/album/6li3fPJh8FoClg3gJTjWV7",
