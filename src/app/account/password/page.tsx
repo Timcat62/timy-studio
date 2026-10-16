@@ -10,8 +10,10 @@ export default async function NewPassword() {
   if (!(await currentUser())) redirect("/login?next=/account/password");
   return (
     <div className="wrap page-head" style={{ paddingBottom: "6rem" }}>
-      <h1 className="display auth__title">Choose a new password</h1>
-      <PasswordForm />
+      <div className="auth stack">
+        <h1 className="display auth__title">Choose a new password</h1>
+        <PasswordForm />
+      </div>
     </div>
   );
 }

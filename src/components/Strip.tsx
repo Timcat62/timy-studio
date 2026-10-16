@@ -1,4 +1,4 @@
-/** A fixed, centred line of what the studio makes. */
+/** A fixed, centred line of what I make. */
 export function Strip({ items }: { items: string[] }) {
   return (
     <div className="strip">

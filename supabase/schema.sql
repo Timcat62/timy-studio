@@ -71,3 +71,8 @@ on conflict (id) do nothing;
 alter table orders add column if not exists user_id uuid references auth.users(id) on delete set null;
 create index if not exists orders_user_idx on orders(user_id);
 create index if not exists orders_email_idx on orders(lower(email));
+
+-- Public bucket for profile photos (the site also creates it on the first upload).
+insert into storage.buckets (id, name, public, file_size_limit, allowed_mime_types)
+values ('avatars', 'avatars', true, 1048576, array['image/webp'])
+on conflict (id) do nothing;

@@ -2,7 +2,8 @@ import { NextResponse } from "next/server";
 import { z } from "zod";
 import { isAdmin } from "@/lib/admin-auth";
 import { formatMoney } from "@/lib/format";
-import { adminEmail, notifyDiscord, orderLink, sendEmail } from "@/lib/notify";
+import { site } from "@/lib/config";
+import { notifyDiscord, orderLink, sendEmail } from "@/lib/notify";
 import { addMessage, isUuid, loadAdminState } from "@/lib/orders";
 import { db } from "@/lib/supabase";
 import type { OrderStatus } from "@/lib/types";
@@ -60,12 +61,12 @@ export async function POST(req: Request, { params }: Ctx) {
     await addMessage(id, "admin", input.body);
     if (order.status === "new") await db().from("orders").update({ status: "discussing" }).eq("id", id);
 
-    // Email the client every reply, with the message itself. Their answer to the email reaches you.
+    // Email the client every reply, with the message itself. Their answer goes to the contact address.
     await sendEmail(
       order.email,
       "New message from timy.",
       `Hi ${order.name},\n\n${input.body}\n\nReply on your project page: ${orderLink(order.token)}\n\ntimy.`,
-      adminEmail(),
+      site.email,
     );
     return NextResponse.json({ ok: true });
   }

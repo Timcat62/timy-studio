@@ -27,7 +27,7 @@ export function PasswordForm() {
   }
 
   return (
-    <form className="form narrow" onSubmit={submit}>
+    <form className="form" onSubmit={submit}>
       <div className="field">
         <label className="label" htmlFor="new-pw">
           New password

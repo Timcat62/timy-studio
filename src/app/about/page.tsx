@@ -50,8 +50,8 @@ export default async function About() {
               I write atmospheric, cinematic electronic music and Brazilian funk, and I release it myself.
             </p>
             <p>
-              Every release gets its own visuals, built in Blender: photoreal cars in places they were never meant to be.
-              That is the look people know from my TikTok, and it is the same craft I now put into client projects.
+              Every release gets its own visuals, made in Blender: cars in places they were never meant to be.
+              That is the look people know from my TikTok and Instagram, and I now make the same kind of videos for clients.
             </p>
             <p>
               <Link href="/start" className="link-arrow" style={{ color: "var(--text)" }}>

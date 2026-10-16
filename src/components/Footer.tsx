@@ -7,15 +7,21 @@ export function Footer() {
     <footer className="site-footer">
       <div className="wrap">
         <div className="site-footer__grid">
-          <p className="site-footer__tag">Automotive CGI and 3D animation.</p>
+          <p className="site-footer__tag">3D car animation, made by me in Blender.</p>
           <div>
-            <h3>Studio</h3>
+            <h3>Menu</h3>
             <ul>
               <li>
                 <Link href="/#work">Work</Link>
               </li>
               <li>
                 <Link href="/#services">Services</Link>
+              </li>
+              <li>
+                <Link href="/portfolio">Portfolio</Link>
+              </li>
+              <li>
+                <Link href="/account">Your account</Link>
               </li>
               <li>
                 <Link href="/about">About and music</Link>
@@ -31,7 +37,7 @@ export function Footer() {
           </div>
         </div>
         <div className="site-footer__small">
-          <span>© {new Date().getFullYear()} {site.name}</span>
+          <span>© {new Date().getFullYear()} {site.name} All rights reserved.</span>
           <Link href="/legal">Legal and terms</Link>
         </div>
       </div>

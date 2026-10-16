@@ -29,7 +29,10 @@ export function Header() {
           <Link href="/#services" className="nav__optional">
             Services
           </Link>
-          <Link href="/about" aria-current={pathname === "/about" ? "page" : undefined}>
+          <Link href="/portfolio" className="nav__optional" aria-current={pathname === "/portfolio" ? "page" : undefined}>
+            Portfolio
+          </Link>
+          <Link href="/about" className="nav__narrow-hide" aria-current={pathname === "/about" ? "page" : undefined}>
             About
           </Link>
           <Link href="/account" aria-current={pathname.startsWith("/account") || pathname === "/login" ? "page" : undefined}>

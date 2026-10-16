@@ -40,12 +40,11 @@ const backdrops: BackdropItem[] = [
 ];
 
 const statement = [
-  { w: "Photoreal" },
-  { w: "cars" },
+  { w: "Cars" },
   { w: "in" },
   { w: "impossible", gold: true },
   { w: "places.", gold: true },
-  { w: "Built" },
+  { w: "Made" },
   { w: "frame" },
   { w: "by" },
   { w: "frame" },
@@ -67,21 +66,21 @@ export default async function Home() {
     <div className="story">
       <ScrollEffects />
 
-      {/* 1. First screen: a video, the title, and what the studio makes */}
+      {/* 1. First screen: a video, the title, and what I make */}
       <section className="pin pin--intro" data-scroll="pin">
         <div className="pin__stage intro__stage">
           <LazyVideo name="palegarden" className="intro__video" />
           <div className="intro__shade" aria-hidden="true" />
           <div className="intro__dim" aria-hidden="true" />
           <div className="intro__inner">
-            <h1 className="display">Automotive CGI studio.</h1>
-            <p>Photoreal car films, stills and ads, built in Blender.</p>
+            <h1 className="display">3D car animation.</h1>
+            <p>I'm timy., a freelance 3D artist. I make car videos, stills and ads in Blender.</p>
             <div className="intro__buttons">
               <Link href="/start" className="btn btn--primary">
-                Start a project <Icon name="arrow" />
+                Work with me <Icon name="arrow" />
               </Link>
-              <Link href="#work" className="btn btn--ghost">
-                See the work
+              <Link href="/portfolio" className="btn btn--ghost">
+                See my work
               </Link>
             </div>
           </div>
@@ -94,14 +93,14 @@ export default async function Home() {
       {/* 2. A video that grows to fill the screen */}
       <section className="pin pin--expand" data-scroll="pin">
         <div className="pin__stage expand__stage">
-          <p className="expand__lead">Rendered, not photographed.</p>
+          <p className="expand__lead">Made in Blender.</p>
           <div className="expand__frame">
             <LazyVideo name="nurburgring" />
             <div className="expand__shade" aria-hidden="true" />
           </div>
           <div className="expand__caption">
             <div className="wrap">
-              <h2 className="display">Every frame, built from scratch.</h2>
+              <h2 className="display">Every frame, made by me.</h2>
             </div>
           </div>
         </div>
@@ -120,7 +119,7 @@ export default async function Home() {
         </div>
       </section>
 
-      {/* 4. What the studio makes, one chapter at a time */}
+      {/* 4. What I make, one chapter at a time */}
       <section id="services" className="pin pin--chapters" data-scroll="pin" data-steps={services.length}>
         <div className="pin__stage">
           <ChapterBackdrop items={backdrops} />
@@ -180,6 +179,9 @@ export default async function Home() {
                 )}
               </div>
               <p className="work-more">
+                <Link className="link-arrow" href="/portfolio" style={{ marginRight: "1.5rem" }}>
+                  See the full portfolio <Icon name="arrow" />
+                </Link>
                 {youtube ? (
                   <a className="link-arrow" href={youtube} target="_blank" rel="noopener noreferrer">
                     More on YouTube <Icon name="arrow-up-right" />
@@ -204,7 +206,7 @@ export default async function Home() {
       {/* 6. How a project works */}
       <section className="section">
         <div className="wrap">
-          <h2 className="h2">How a project works</h2>
+          <h2 className="h2">How working with me works</h2>
           <p className="lede">You are never asked to pay before we have agreed on a price together.</p>
           <div className="process" data-scroll="view">
             <span className="process__line" aria-hidden="true" />

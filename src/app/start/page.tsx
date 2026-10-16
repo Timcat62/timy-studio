@@ -2,11 +2,12 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { BriefForm } from "@/components/BriefForm";
 import { currentUser } from "@/lib/auth";
+import { profileOf } from "@/lib/profile";
 import { maxFileSizeMB, maxFiles, projectTypes } from "@/lib/config";
 
 export const metadata: Metadata = {
   title: "Start a project",
-  description: "Send a brief for an automotive CGI or 3D animation project. Nothing to pay until we agree on a price.",
+  description: "Tell me about your 3D car animation project. Nothing to pay until we agree on a price.",
 };
 
 export default async function Start({ searchParams }: { searchParams: Promise<{ type?: string }> }) {
@@ -14,7 +15,7 @@ export default async function Start({ searchParams }: { searchParams: Promise<{ 
   const defaultType = projectTypes.includes(type ?? "") ? (type as string) : projectTypes[0];
   const user = await currentUser();
   const account = user?.email
-    ? { email: user.email, name: String(user.user_metadata?.name ?? user.user_metadata?.full_name ?? "") }
+    ? { email: user.email, name: profileOf(user).name }
     : null;
 
   return (

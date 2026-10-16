@@ -43,7 +43,7 @@ export async function POST(req: Request, { params }: Ctx) {
             unit_amount: order.quote_amount,
             product_data: {
               name: `timy. | ${order.project_type}`,
-              description: order.quote_note?.slice(0, 300) || "Custom CGI project, price agreed in the project chat.",
+              description: order.quote_note?.slice(0, 300) || "Custom 3D animation project, price agreed in the project chat.",
             },
           },
         },

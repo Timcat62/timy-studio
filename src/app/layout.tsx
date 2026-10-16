@@ -10,10 +10,10 @@ import { siteUrl } from "@/lib/format";
 
 export const metadata: Metadata = {
   metadataBase: new URL(siteUrl()),
-  title: { default: "timy. | Automotive CGI and 3D animation", template: "%s | timy." },
+  title: { default: "timy. | 3D car animation", template: "%s | timy." },
   description: site.description,
   openGraph: {
-    title: "timy. | Automotive CGI and 3D animation",
+    title: "timy. | 3D car animation",
     description: site.description,
     url: siteUrl(),
     siteName: "timy.",

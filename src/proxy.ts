@@ -6,7 +6,8 @@ export async function proxy(request: NextRequest) {
   const url = process.env.NEXT_PUBLIC_SUPABASE_URL;
   const key = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
   let response = NextResponse.next({ request });
-  if (!url || !key) return response;
+  // visitors who never signed in have no Supabase cookie: nothing to refresh
+  if (!url || !key || !request.cookies.getAll().some((c) => c.name.startsWith("sb-"))) return response;
 
   const supabase = createServerClient(url, key, {
     cookies: {
@@ -24,5 +25,5 @@ export async function proxy(request: NextRequest) {
 
 export const config = {
   // skip static files, media and the Stripe webhook
-  matcher: ["/((?!_next/static|_next/image|images/|video/|api/stripe|api/page-view|favicon|icon|og\\.jpg|robots|sitemap).*)"],
+  matcher: ["/((?!_next/static|_next/image|images/|video/|portfolio/|apple-icon|api/stripe|api/page-view|favicon|icon|og\\.jpg|robots|sitemap).*)"],
 };

@@ -8,7 +8,7 @@ export const site = {
   domain: "timy.studio",
   email: "contact@timy.studio",
   description:
-    "Automotive CGI and 3D animation. Car films, stills, ads and Spotify Canvas, built in Blender.",
+    "I'm timy., a freelance 3D artist. I make car animations, stills, ads and Spotify Canvas in Blender.",
 };
 
 /**
@@ -89,31 +89,31 @@ export const works: { url: string; title?: string; thumb?: string }[] = [
 export const services: { name: string; text: string; delivery: string; type: string }[] = [
   {
     name: "Car films",
-    text: "A fully CG film of a car for a launch, a brand or an artist. Modelling clean-up, lighting, camera work, grade and sound sync.",
+    text: "A short 3D film of a car, for a launch, a brand or a music release. I handle the scene, lighting, camera moves, edit and sound sync.",
     delivery: "Landscape and vertical masters",
     type: "Car film",
   },
   {
     name: "Stills",
-    text: "Photoreal renders of a car in a studio or somewhere it should not be. For covers, ads and catalogues.",
-    delivery: "Single frames at print size",
+    text: "Still images of a car in a clean setting or somewhere it should not be. For covers, posts and posters.",
+    delivery: "High-resolution images",
     type: "Stills",
   },
   {
     name: "Ads",
-    text: "Short ads for a car, a brand or a product, cut for TikTok, Reels, Shorts or the big screen.",
+    text: "Short videos for a car, a brand or a product, cut for TikTok, Reels and Shorts.",
     delivery: "Short edits in the formats you need",
     type: "Ads",
   },
   {
     name: "Spotify Canvas",
-    text: "The looping vertical visual that plays behind a track on Spotify, built around your release.",
+    text: "The looping vertical visual that plays behind your track on Spotify, made around your release.",
     delivery: "Seamless vertical loops",
     type: "Spotify Canvas",
   },
   {
     name: "And more",
-    text: "Cover art, visualizers, something that does not fit in a box. Describe it in a brief and we'll see what's possible.",
+    text: "Cover art, visualizers, something that doesn't fit in a box. Tell me about it and we'll see what's possible.",
     delivery: "Scoped together in the chat",
     type: "Something else",
   },

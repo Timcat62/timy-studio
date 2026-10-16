@@ -1,9 +1,11 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { redirect } from "next/navigation";
+import { Avatar, ProfileForm } from "@/components/ProfileForm";
 import { SignOutButton } from "@/components/SignOutButton";
 import { claimOrders, currentUser } from "@/lib/auth";
 import { formatDate, formatMoney } from "@/lib/format";
+import { profileOf } from "@/lib/profile";
 import { db } from "@/lib/supabase";
 import { statusLabels, type OrderStatus } from "@/lib/types";
 
@@ -31,16 +33,20 @@ export default async function Account() {
     .order("created_at", { ascending: false })
     .limit(100);
   const rows = (data as Row[] | null) ?? [];
+  const profile = profileOf(user);
   const usesPassword = user.app_metadata?.providers?.includes("email") ?? user.app_metadata?.provider === "email";
 
   return (
     <div className="wrap" style={{ paddingBottom: "6rem" }}>
       <div className="page-head admin-bar">
-        <div>
-          <h1 className="display" style={{ fontSize: "clamp(1.75rem, 4vw, 2.5rem)" }}>
-            Your projects
-          </h1>
-          <p className="muted">Signed in as {user.email}</p>
+        <div className="account-hello">
+          <Avatar profile={profile} size={56} />
+          <div>
+            <h1 className="display" style={{ fontSize: "clamp(1.75rem, 4vw, 2.5rem)" }}>
+              {profile.name ? `Hi ${profile.name.split(" ")[0]}` : "Your account"}
+            </h1>
+            <p className="muted">Signed in as {user.email}</p>
+          </div>
         </div>
         <div style={{ display: "flex", gap: "0.75rem", flexWrap: "wrap" }}>
           {usesPassword ? (
@@ -52,45 +58,51 @@ export default async function Account() {
         </div>
       </div>
 
-      {rows.length === 0 ? (
-        <div className="notice stack">
-          <p>No projects yet. Briefs you send while signed in, or with this email, show up here.</p>
-          <p>
-            <Link href="/start" className="btn btn--primary">
-              Start a project
-            </Link>
-          </p>
+      <div className="account-grid">
+        <div>
+          <h2 className="h2 account-grid__title">Your projects</h2>
+          {rows.length === 0 ? (
+            <div className="notice stack">
+              <p>No projects yet. Briefs you send while signed in, or with this email, show up here.</p>
+              <p>
+                <Link href="/start" className="btn btn--primary">
+                  Start a project
+                </Link>
+              </p>
+            </div>
+          ) : (
+            <div className="table-wrap">
+              <table className="table">
+                <thead>
+                  <tr>
+                    <th>Project</th>
+                    <th>Status</th>
+                    <th>Price</th>
+                    <th>Sent</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {rows.map((r) => (
+                    <tr key={r.token}>
+                      <td>
+                        <Link href={`/order/${r.token}`}>{r.project_type}</Link>
+                      </td>
+                      <td>
+                        <span className={`badge badge--${r.status}`}>{statusLabels[r.status]}</span>
+                      </td>
+                      <td className="num">{r.quote_amount ? formatMoney(r.quote_amount, r.quote_currency) : "—"}</td>
+                      <td className="num" suppressHydrationWarning>
+                        {formatDate(r.created_at)}
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          )}
         </div>
-      ) : (
-        <div className="table-wrap">
-          <table className="table">
-            <thead>
-              <tr>
-                <th>Project</th>
-                <th>Status</th>
-                <th>Price</th>
-                <th>Sent</th>
-              </tr>
-            </thead>
-            <tbody>
-              {rows.map((r) => (
-                <tr key={r.token}>
-                  <td>
-                    <Link href={`/order/${r.token}`}>{r.project_type}</Link>
-                  </td>
-                  <td>
-                    <span className={`badge badge--${r.status}`}>{statusLabels[r.status]}</span>
-                  </td>
-                  <td className="num">{r.quote_amount ? formatMoney(r.quote_amount, r.quote_currency) : "—"}</td>
-                  <td className="num" suppressHydrationWarning>
-                    {formatDate(r.created_at)}
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
-      )}
+        <ProfileForm profile={profile} />
+      </div>
     </div>
   );
 }
