@@ -1638,21 +1638,32 @@ p {
 
 :root {
   --spring: cubic-bezier(0.34, 1.7, 0.5, 1);
-  --glass-blur: blur(3px) saturate(1.5) brightness(1.04);
+  --glass-blur: blur(1.5px) saturate(1.35);
   --glass-body:
-    radial-gradient(60% 95% at 16% 0%, rgba(255, 255, 255, 0.12), rgba(255, 255, 255, 0) 62%),
-    radial-gradient(55% 85% at 88% 115%, rgba(255, 255, 255, 0.06), rgba(255, 255, 255, 0) 62%),
-    rgba(255, 255, 255, 0.005);
-  /* the coloured inset pairs fake a chromatic fringe where real refraction is not available */
+    radial-gradient(60% 95% at 16% 0%, rgba(255, 255, 255, 0.06), rgba(255, 255, 255, 0) 62%),
+    radial-gradient(55% 85% at 88% 115%, rgba(255, 255, 255, 0.03), rgba(255, 255, 255, 0) 62%),
+    transparent;
+  /* coloured inner edges: light split into a rainbow where it enters the glass */
   --glass-shadow:
-    inset 0 0 0 1px rgba(255, 255, 255, 0.05),
-    inset 0 1.5px 2px -0.5px rgba(255, 255, 255, 0.45),
-    inset 0 -1.5px 2px -0.5px rgba(255, 255, 255, 0.16),
-    inset 2px 0 3px -1px rgba(255, 70, 90, 0.16),
-    inset -2px 0 3px -1px rgba(70, 150, 255, 0.16),
-    inset 0 2px 3px -1px rgba(120, 220, 255, 0.1),
-    inset 0 -2px 3px -1px rgba(255, 190, 80, 0.1),
-    0 8px 24px rgba(0, 0, 0, 0.26);
+    inset 0 1.5px 2px -0.5px rgba(255, 255, 255, 0.35),
+    inset 0 -1.5px 2px -0.5px rgba(255, 255, 255, 0.12),
+    inset 3px 0 4px -1px rgba(255, 60, 120, 0.22),
+    inset -3px 0 4px -1px rgba(60, 140, 255, 0.22),
+    inset 0 3px 4px -1px rgba(90, 230, 255, 0.14),
+    inset 0 -3px 4px -1px rgba(255, 200, 60, 0.16),
+    0 8px 24px rgba(0, 0, 0, 0.22);
+  /* rainbow ring that rotates with the pointer */
+  --glass-rainbow: conic-gradient(
+    from calc(var(--ang, 205deg) + 40deg),
+    rgba(255, 60, 90, 0.75),
+    rgba(255, 170, 40, 0.7),
+    rgba(250, 240, 80, 0.65),
+    rgba(80, 230, 140, 0.65),
+    rgba(60, 200, 255, 0.7),
+    rgba(110, 100, 255, 0.75),
+    rgba(220, 80, 255, 0.7),
+    rgba(255, 60, 90, 0.75)
+  );
 }
 
 .btn,
@@ -1685,7 +1696,7 @@ p {
   position: absolute;
   inset: 0;
   z-index: 2;
-  padding: 1.2px;
+  padding: 1.5px;
   border-radius: inherit;
   pointer-events: none;
   background: conic-gradient(
@@ -1696,7 +1707,8 @@ p {
     rgba(255, 255, 255, 0.04) 58%,
     rgba(255, 255, 255, 0.36) 78%,
     rgba(255, 255, 255, 0.8)
-  );
+  ),
+    var(--glass-rainbow);
   -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
   -webkit-mask-composite: xor;
   mask: linear-gradient(#000 0 0) content-box exclude, linear-gradient(#000 0 0);

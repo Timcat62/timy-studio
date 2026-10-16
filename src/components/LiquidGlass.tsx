@@ -9,7 +9,7 @@ const TACTILE = ".btn, .social";
 
 const NS = "http://www.w3.org/2000/svg";
 /** How far red and blue drift apart at the edge (0 = no colour fringe, 0.2 = very strong). */
-const DISPERSION = 0.14;
+const DISPERSION = 0.3;
 
 /**
  * Real refraction (the lens-like bending of whatever is behind the glass) needs SVG filters inside backdrop-filter,
@@ -213,7 +213,7 @@ export function LiquidGlass() {
         const radius = parseFloat(getComputedStyle(el).borderTopLeftRadius) || 0;
         const r = Math.min(radius, h / 2, w / 2) || Math.min(h, w) / 2;
         const id = filterFor(w, h, Math.round(r));
-        const value = `blur(0.5px) url(#${id}) saturate(1.5) brightness(1.04)`;
+        const value = `url(#${id}) saturate(1.35)`;
         el.style.setProperty("backdrop-filter", value);
         el.style.setProperty("-webkit-backdrop-filter", value);
       };
