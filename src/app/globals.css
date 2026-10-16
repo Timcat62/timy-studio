@@ -214,26 +214,6 @@ p {
   opacity: 0.45;
   cursor: not-allowed;
 }
-.btn--primary {
-  background: var(--text);
-  color: var(--ground);
-}
-.btn--primary:hover:not(:disabled) {
-  background: #fff;
-}
-.btn--ghost {
-  border-color: var(--line-strong);
-}
-.btn--ghost:hover:not(:disabled) {
-  border-color: var(--text);
-}
-.btn--accent {
-  background: var(--accent);
-  color: #fff;
-}
-.btn--accent:hover:not(:disabled) {
-  background: var(--accent-hover);
-}
 .btn--small {
   padding: 0.6rem 1rem;
   font-size: 0.82rem;
@@ -320,143 +300,6 @@ p {
 @media (max-width: 44rem) {
   .nav a.nav__optional {
     display: none;
-  }
-}
-
-/* ---------------- Hero ---------------- */
-
-.hero {
-  position: relative;
-  overflow: hidden;
-  isolation: isolate;
-  min-height: 100svh;
-  display: flex;
-  flex-direction: column;
-  justify-content: flex-end;
-  padding-top: calc(var(--header-h) + 3rem);
-}
-
-/* The stage: cyclorama glow on the floor, horizon line, overhead softbox. */
-.hero__stage {
-  position: absolute;
-  inset: 0;
-  z-index: -3;
-  background:
-    radial-gradient(60% 34% at 50% 100%, rgba(201, 162, 90, 0.2), transparent 72%),
-    radial-gradient(38% 30% at 74% 0%, rgba(241, 241, 238, 0.07), transparent 72%),
-    linear-gradient(180deg, #060708 0%, #08090b 58%, #0d0a0c 100%);
-}
-.hero__img,
-.hero__reel {
-  position: absolute;
-  inset: 0;
-  z-index: -2;
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  object-position: 50% 42%;
-}
-.hero__shade {
-  position: absolute;
-  inset: 0;
-  z-index: -1;
-  background:
-    linear-gradient(to top, rgba(6, 7, 8, 0.97) 0%, rgba(6, 7, 8, 0.6) 38%, rgba(6, 7, 8, 0.25) 100%),
-    linear-gradient(90deg, rgba(6, 7, 8, 0.6) 0%, rgba(6, 7, 8, 0) 65%);
-}
-.hero__light {
-  position: absolute;
-  inset: 0;
-  z-index: -1;
-  overflow: hidden;
-  pointer-events: none;
-}
-/* A softbox reflection travelling across the paint: the one moving element in the hero. */
-.hero__light::before {
-  content: "";
-  position: absolute;
-  top: -35%;
-  left: -45%;
-  width: 30%;
-  height: 170%;
-  transform: rotate(16deg) translateX(0);
-  background: linear-gradient(
-    90deg,
-    transparent 0%,
-    rgba(241, 241, 238, 0.035) 30%,
-    rgba(241, 241, 238, 0.12) 50%,
-    rgba(241, 241, 238, 0.035) 70%,
-    transparent 100%
-  );
-  opacity: 0;
-  animation: sweep 18s var(--ease) 0.6s infinite;
-}
-@keyframes sweep {
-  0% {
-    opacity: 0;
-    transform: rotate(16deg) translateX(0);
-  }
-  3% {
-    opacity: 1;
-  }
-  18% {
-    opacity: 1;
-  }
-  22%,
-  100% {
-    opacity: 0;
-    transform: rotate(16deg) translateX(620%);
-  }
-}
-
-.hero__body {
-  display: grid;
-  gap: 2.5rem 4rem;
-  grid-template-columns: minmax(0, 1.7fr) minmax(0, 1fr);
-  align-items: end;
-  padding-bottom: clamp(2.5rem, 6vw, 4.5rem);
-}
-.hero h1 {
-  grid-column: 1 / -1;
-  font-size: clamp(2.6rem, 7.6vw, 7.5rem);
-  max-width: 13ch;
-}
-.hero__side {
-  grid-column: 2;
-}
-.hero__side {
-  display: grid;
-  gap: 1.75rem;
-  justify-items: start;
-  padding-bottom: 0.5rem;
-}
-.hero__sub {
-  color: rgba(241, 241, 238, 0.78);
-  font-size: clamp(1rem, 1.35vw, 1.15rem);
-  max-width: 36ch;
-}
-.hero__meta {
-  border-top: 1px solid var(--line-strong);
-  display: flex;
-  justify-content: space-between;
-  gap: 1rem;
-  flex-wrap: wrap;
-  padding-block: 1.1rem;
-}
-@media (max-width: 52rem) {
-  .hero__body {
-    grid-template-columns: 1fr;
-  }
-  .hero__side {
-    grid-column: 1;
-  }
-}
-@media (prefers-reduced-motion: reduce) {
-  .hero__light::before {
-    animation: none;
-  }
-  html {
-    scroll-behavior: auto;
   }
 }
 
@@ -1024,7 +867,7 @@ p {
   width: 100%;
   height: 100%;
   object-fit: cover;
-  object-position: 50% 55%;
+  object-position: 50% 50%;
   opacity: 0.7;
 }
 .about-hero__shade {
@@ -1035,9 +878,11 @@ p {
 }
 .about-hero__body {
   padding-bottom: clamp(2rem, 5vw, 3.5rem);
+  text-align: center;
 }
 .about-hero h1 {
   font-size: clamp(2.2rem, 6vw, 5.25rem);
+  margin-inline: auto;
 }
 
 .quiet-h {
@@ -1785,79 +1630,180 @@ p {
 
 /* =====================================================================
    Liquid glass
-   Translucent fills, blur + saturation, a bright upper edge and a soft
-   specular highlight that follows the pointer (see GlassPointer).
+   Near-transparent fill, a little blur and colour lift, a rim of light
+   that turns toward the pointer, and (in Chromium, see LiquidGlass) a
+   real lens effect that bends whatever sits behind the edge.
+   Press a button and it swells, lights up and springs back, like iOS 26.
 ===================================================================== */
 
 :root {
-  --glass-fill: linear-gradient(180deg, rgba(255, 255, 255, 0.16), rgba(255, 255, 255, 0.05));
-  --glass-blur: blur(18px) saturate(1.8);
-  --glass-edge: rgba(255, 255, 255, 0.2);
-  --glass-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.45), inset 0 -1px 0 rgba(255, 255, 255, 0.05),
-    0 10px 28px rgba(0, 0, 0, 0.38);
+  --spring: cubic-bezier(0.34, 1.7, 0.5, 1);
+  --glass-blur: blur(5px) saturate(2) brightness(1.3);
+  --glass-body:
+    radial-gradient(60% 95% at 16% 0%, rgba(255, 255, 255, 0.3), rgba(255, 255, 255, 0) 62%),
+    radial-gradient(55% 85% at 88% 115%, rgba(255, 255, 255, 0.16), rgba(255, 255, 255, 0) 62%),
+    rgba(255, 255, 255, 0.03);
+  --glass-shadow:
+    inset 0 0 0 1px rgba(255, 255, 255, 0.07),
+    inset 0 1.5px 2px -0.5px rgba(255, 255, 255, 0.6),
+    inset 0 -1.5px 2px -0.5px rgba(255, 255, 255, 0.24),
+    inset 0 0 18px rgba(255, 255, 255, 0.07),
+    0 8px 24px rgba(0, 0, 0, 0.3);
 }
 
 .btn,
-.social {
-  position: relative;
+.social,
+.site-header .site-header__row,
+.chapters__dots,
+.yt__icon,
+.work-card__play {
   isolation: isolate;
+  border: 0;
+  background: var(--glass-body);
+  -webkit-backdrop-filter: var(--glass-blur);
+  backdrop-filter: var(--glass-blur);
+  box-shadow: var(--glass-shadow);
+}
+.btn,
+.social,
+.site-header .site-header__row {
+  position: relative;
+}
+
+/* Rim of light: a thin ring whose bright side faces the pointer */
+.btn::before,
+.social::before,
+.site-header__row::before,
+.chapters__dots::before,
+.yt__icon::before,
+.work-card__play::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  padding: 1.2px;
+  border-radius: inherit;
+  pointer-events: none;
+  background: conic-gradient(
+    from var(--ang, 205deg),
+    rgba(255, 255, 255, 0.95),
+    rgba(255, 255, 255, 0.1) 18%,
+    rgba(255, 255, 255, 0.42) 38%,
+    rgba(255, 255, 255, 0.06) 58%,
+    rgba(255, 255, 255, 0.5) 78%,
+    rgba(255, 255, 255, 0.95)
+  );
+  -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor;
+  mask: linear-gradient(#000 0 0) content-box exclude, linear-gradient(#000 0 0);
+}
+
+/* Soft light under the finger */
+.btn::after,
+.social::after,
+.site-header__row::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  border-radius: inherit;
+  pointer-events: none;
+  background: radial-gradient(circle at var(--mx, 50%) var(--my, 0%), rgba(255, 255, 255, 0.42), rgba(255, 255, 255, 0) 58%);
+  opacity: 0;
+  transition: opacity 0.35s var(--ease);
+}
+.btn:hover::after,
+.social:hover::after,
+.site-header__row:hover::after {
+  opacity: 0.8;
+}
+
+/* Buttons and logo buttons are tactile */
+.btn,
+.social {
   overflow: hidden;
+  touch-action: manipulation;
+  user-select: none;
   -webkit-tap-highlight-color: transparent;
+  transform: translate(var(--tx, 0px), var(--ty, 0px)) scale(var(--sc, 1));
+  transition:
+    transform 0.65s var(--spring),
+    background 0.3s var(--ease),
+    box-shadow 0.3s var(--ease);
 }
 .btn {
   border-radius: 999px;
 }
-.btn::after,
-.social::after {
-  content: "";
-  position: absolute;
-  inset: 0;
-  z-index: -1;
-  border-radius: inherit;
-  pointer-events: none;
-  background: radial-gradient(110px 70px at var(--mx, 50%) var(--my, -30%), rgba(255, 255, 255, 0.4), transparent 70%);
-  opacity: 0;
-  transition: opacity 0.3s var(--ease);
+@media (hover: hover) and (pointer: fine) {
+  .btn:hover:not(:disabled),
+  .social:hover {
+    --sc: 1.05;
+  }
 }
-.btn:hover::after,
-.social:hover::after {
+.btn:active:not(:disabled),
+.social:active,
+.btn.is-pressed,
+.social.is-pressed {
+  --sc: 1.12;
+  transition-duration: 0.22s;
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.3) 0%, rgba(255, 255, 255, 0.04) 55%), rgba(255, 255, 255, 0.16);
+  box-shadow:
+    inset 0 0 0 1px rgba(255, 255, 255, 0.14),
+    inset 0 2px 3px -0.5px rgba(255, 255, 255, 0.8),
+    inset 0 -2px 3px -0.5px rgba(255, 255, 255, 0.4),
+    inset 0 0 30px rgba(255, 255, 255, 0.3),
+    0 0 40px rgba(255, 255, 255, 0.18),
+    0 10px 28px rgba(0, 0, 0, 0.32);
+}
+.btn:active:not(:disabled)::after,
+.social:active::after,
+.is-pressed::after {
   opacity: 1;
 }
-
-.btn--primary {
-  color: #1c1608;
-  border-color: rgba(255, 255, 255, 0.55);
-  background: linear-gradient(180deg, rgba(251, 240, 210, 0.96) 0%, rgba(226, 198, 130, 0.88) 100%);
-  -webkit-backdrop-filter: blur(14px) saturate(1.6);
-  backdrop-filter: blur(14px) saturate(1.6);
-  box-shadow:
-    inset 0 1px 0 rgba(255, 255, 255, 0.95),
-    inset 0 -3px 8px rgba(122, 92, 32, 0.28),
-    0 8px 24px rgba(0, 0, 0, 0.45),
-    0 0 30px rgba(201, 162, 90, 0.18);
+.btn:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+  --sc: 1;
 }
-.btn--primary:hover:not(:disabled) {
-  background: linear-gradient(180deg, #fff7de 0%, #eed293 100%);
+
+.btn--primary,
+.btn--accent {
+  color: #fff;
+  text-shadow: 0 1px 10px rgba(0, 0, 0, 0.4);
+  background:
+    radial-gradient(60% 95% at 16% 0%, rgba(255, 244, 214, 0.38), rgba(255, 255, 255, 0) 62%),
+    radial-gradient(55% 85% at 88% 115%, rgba(255, 220, 140, 0.24), rgba(255, 255, 255, 0) 62%),
+    rgba(214, 172, 84, 0.17);
+  box-shadow:
+    inset 0 0 0 1px rgba(255, 236, 190, 0.1),
+    inset 0 1.5px 2px -0.5px rgba(255, 240, 200, 0.7),
+    inset 0 -1.5px 2px -0.5px rgba(255, 220, 140, 0.3),
+    inset 0 0 18px rgba(228, 196, 126, 0.16),
+    0 0 34px rgba(201, 162, 90, 0.24),
+    0 8px 24px rgba(0, 0, 0, 0.32);
+}
+.btn--primary:active:not(:disabled),
+.btn--primary.is-pressed,
+.btn--accent:active:not(:disabled),
+.btn--accent.is-pressed {
+  background:
+    linear-gradient(180deg, rgba(255, 244, 214, 0.42) 0%, rgba(255, 255, 255, 0.05) 55%), rgba(228, 190, 100, 0.5);
+  box-shadow:
+    inset 0 0 0 1px rgba(255, 236, 190, 0.2),
+    inset 0 2px 3px -0.5px rgba(255, 244, 214, 0.9),
+    inset 0 -2px 3px -0.5px rgba(255, 220, 140, 0.45),
+    inset 0 0 30px rgba(255, 224, 150, 0.4),
+    0 0 52px rgba(214, 172, 84, 0.45),
+    0 10px 28px rgba(0, 0, 0, 0.32);
 }
 .btn--ghost {
   color: var(--text);
-  border-color: rgba(255, 255, 255, 0.2);
-  background: var(--glass-fill);
-  -webkit-backdrop-filter: var(--glass-blur);
-  backdrop-filter: var(--glass-blur);
-  box-shadow: var(--glass-shadow);
 }
-.btn--ghost:hover:not(:disabled) {
-  border-color: rgba(255, 255, 255, 0.42);
-  background: linear-gradient(180deg, rgba(255, 255, 255, 0.24), rgba(255, 255, 255, 0.09));
-}
-.btn--accent {
-  color: #fff;
-  border-color: rgba(228, 196, 126, 0.5);
-  background: linear-gradient(180deg, rgba(228, 196, 126, 0.42), rgba(201, 162, 90, 0.2));
-  -webkit-backdrop-filter: var(--glass-blur);
-  backdrop-filter: var(--glass-blur);
-  box-shadow: var(--glass-shadow);
+.social,
+.site-footer .social,
+.site-footer .social:hover {
+  color: var(--text);
 }
 
 /* Header: a floating glass capsule */
@@ -1876,40 +1822,20 @@ p {
   height: 3.5rem;
   padding: 0.4rem 0.45rem 0.4rem 1.5rem;
   border-radius: 999px;
-  border: 1px solid var(--glass-edge);
-  background: var(--glass-fill), rgba(10, 11, 13, 0.4);
-  -webkit-backdrop-filter: blur(22px) saturate(1.8);
-  backdrop-filter: blur(22px) saturate(1.8);
-  box-shadow: var(--glass-shadow);
-  transition: background-color 0.3s var(--ease);
 }
 .site-header[data-scrolled="true"] .site-header__row {
-  background: var(--glass-fill), rgba(10, 11, 13, 0.62);
+  background:
+    radial-gradient(40% 120% at 12% 0%, rgba(255, 255, 255, 0.24), rgba(255, 255, 255, 0) 60%), rgba(8, 9, 11, 0.38);
 }
 .wordmark {
   font-size: 1.25rem;
 }
 
-/* Round logo buttons */
-.social {
-  color: var(--text);
-  border-color: rgba(255, 255, 255, 0.18);
-  background: var(--glass-fill);
-  -webkit-backdrop-filter: var(--glass-blur);
-  backdrop-filter: var(--glass-blur);
-  box-shadow: var(--glass-shadow);
-}
-.social:hover,
-.site-footer .social:hover {
-  color: #1c1608;
-  background: linear-gradient(180deg, #fff7de, #eed293);
-  border-color: rgba(255, 255, 255, 0.6);
-}
-.site-footer .social {
-  color: var(--text);
+.chapters__dots {
+  border-radius: 999px;
 }
 
-/* Cards and panels */
+/* Cards and panels: frosted glass with a lit upper edge */
 .panel,
 .chat,
 .notice,
@@ -1937,70 +1863,56 @@ p {
 .release__art {
   border-radius: 18px;
 }
-.yt__icon,
-.work-card__play {
-  background: var(--glass-fill), rgba(10, 11, 13, 0.35);
-  -webkit-backdrop-filter: var(--glass-blur);
-  backdrop-filter: var(--glass-blur);
-  border-color: rgba(255, 255, 255, 0.32);
-  box-shadow: var(--glass-shadow);
-}
-.yt__play:hover .yt__icon,
-.yt__play:focus-visible .yt__icon,
-.work-card:hover .work-card__play {
-  background: linear-gradient(180deg, #fff7de, #eed293);
-  color: #1c1608;
+
+@media (prefers-reduced-motion: reduce) {
+  .btn,
+  .social {
+    transform: none;
+    transition: none;
+  }
 }
 
-/* ---------------- Fixed capability strip (replaces the scrolling ticker) ---------------- */
+/* ---------------- Fixed, centred line of services ---------------- */
 
-.strip {
-  border-block: 1px solid var(--line);
-}
 .strip__list {
   list-style: none;
   margin: 0;
-  padding: 0;
-  display: grid;
-  grid-template-columns: repeat(4, minmax(0, 1fr));
+  padding: 0 var(--gutter);
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: center;
 }
 .strip__item {
   display: flex;
   align-items: center;
-  justify-content: center;
-  gap: 0.8rem;
-  padding: 1.5rem 1rem;
-  border-left: 1px solid var(--line);
+  padding: 1.25rem 0;
   font-stretch: 118%;
   font-weight: 600;
-  font-size: clamp(0.95rem, 1.4vw, 1.1rem);
+  font-size: clamp(0.9rem, 1.4vw, 1.1rem);
+  letter-spacing: -0.01em;
   text-align: center;
 }
-.strip__item:first-child {
-  border-left: 0;
-}
-.strip__item::before {
+.strip__item + .strip__item::before {
   content: "";
   flex: none;
-  width: 0.4rem;
-  height: 0.4rem;
+  width: 0.38rem;
+  height: 0.38rem;
+  margin-inline: clamp(0.9rem, 2.6vw, 2.25rem);
   background: var(--accent);
   transform: rotate(45deg);
 }
 @media (max-width: 40rem) {
+  .strip__item {
+    padding: 0.4rem 0;
+  }
   .strip__list {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-  }
-  .strip__item:nth-child(odd) {
-    border-left: 0;
-  }
-  .strip__item:nth-child(n + 3) {
-    border-top: 1px solid var(--line);
+    padding-block: 1rem;
   }
 }
 
 /* =====================================================================
-   Scroll story (/studio)
+   Scroll story (the homepage)
    ScrollEffects writes --p (0 to 1) on every [data-scroll] element.
    Pinned sections are tall wrappers around a sticky 100svh stage.
 ===================================================================== */
@@ -2022,60 +1934,72 @@ p {
   place-items: center;
 }
 
-/* 1. Intro */
+/* 1. First screen */
 .pin--intro {
-  --h: 230svh;
+  --h: 240svh;
   --p: 0;
 }
 .intro__stage {
-  background: radial-gradient(60% 50% at 50% 55%, rgba(201, 162, 90, 0.14), transparent 70%);
+  background: var(--ground);
+}
+.intro__video {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: 50% 55%;
+}
+.intro__shade {
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(70% 60% at 50% 50%, rgba(6, 7, 8, 0.28), rgba(6, 7, 8, 0) 100%),
+    linear-gradient(to bottom, rgba(6, 7, 8, 0.42) 0%, rgba(6, 7, 8, 0.08) 38%, rgba(6, 7, 8, 0.72) 100%);
+}
+.intro__dim {
+  position: absolute;
+  inset: 0;
+  background: var(--ground);
+  opacity: clamp(0, calc(var(--p) * 1.5 - 0.1), 0.92);
 }
 .intro__inner {
+  position: relative;
   text-align: center;
   padding-inline: var(--gutter);
-  transform: scale(calc(1 + var(--p) * 0.45));
-  opacity: clamp(0, calc(1.6 - var(--p) * 1.8), 1);
+  transform: scale(calc(1 + var(--p) * 0.4));
+  opacity: clamp(0, calc(1.6 - var(--p) * 1.9), 1);
   will-change: transform, opacity;
 }
+.pin--intro[data-passed] .intro__inner {
+  pointer-events: none;
+}
 .intro__inner h1 {
-  font-size: clamp(2.8rem, 10.5vw, 10rem);
+  font-size: clamp(2.8rem, 9.5vw, 9rem);
   max-width: 11ch;
   margin-inline: auto;
 }
 .intro__inner p {
   margin-top: 1.5rem;
-  color: var(--muted);
+  color: rgba(241, 241, 238, 0.82);
   font-size: clamp(1.05rem, 1.8vw, 1.5rem);
 }
-.intro__hint {
+.intro__buttons {
+  margin-top: 2.25rem;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0.9rem;
+}
+.intro__strip {
   position: absolute;
-  bottom: clamp(1.5rem, 5vh, 3rem);
-  left: 50%;
-  transform: translateX(-50%);
-  opacity: clamp(0, calc(1 - var(--p) * 6), 1);
-}
-.scroll-hint {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.6rem;
-  padding: 0.65rem 1.1rem;
-  border-radius: 999px;
-  border: 1px solid var(--glass-edge);
-  background: var(--glass-fill);
-  -webkit-backdrop-filter: var(--glass-blur);
-  backdrop-filter: var(--glass-blur);
-  box-shadow: var(--glass-shadow);
-  font-size: 0.78rem;
-  letter-spacing: 0.12em;
-  text-transform: uppercase;
-  color: var(--text);
-}
-.scroll-hint svg {
-  width: 1rem;
-  height: 1rem;
+  inset: auto 0 0 0;
+  border-top: 1px solid rgba(255, 255, 255, 0.14);
+  background: linear-gradient(to top, rgba(6, 7, 8, 0.7), rgba(6, 7, 8, 0.25));
+  opacity: clamp(0, calc(1.4 - var(--p) * 3), 1);
 }
 
-/* 2. Image that grows to fill the screen */
+/* 2. A video that grows to fill the screen */
 .pin--expand {
   --h: 340svh;
   --p: 0;
@@ -2100,17 +2024,17 @@ p {
 .expand__frame {
   position: absolute;
   inset: 0;
+  background: var(--sunken);
   clip-path: inset(
     calc((1 - var(--e)) * 27svh) calc((1 - var(--e)) * 17vw) calc((1 - var(--e)) * 12svh) round calc((1 - var(--e)) * 34px)
   );
   will-change: clip-path;
 }
-.expand__frame img {
+.expand__frame video {
   width: 100%;
   height: 100%;
   object-fit: cover;
-  object-position: 50% 45%;
-  transform: scale(calc(1.2 - 0.2 * var(--e)));
+  object-position: 50% 55%;
 }
 .expand__shade {
   position: absolute;
@@ -2138,15 +2062,15 @@ p {
 }
 .statement__text {
   --n: 16;
+  width: 100%;
+  max-width: min(88rem, 100%);
+  margin-inline: auto;
   padding-inline: var(--gutter);
   font-stretch: 118%;
   font-weight: 650;
   font-size: clamp(2rem, 5.4vw, 5rem);
   letter-spacing: -0.03em;
   line-height: 1.08;
-  margin-inline: auto;
-  width: 100%;
-  max-width: min(88rem, 100%);
 }
 .statement__text span {
   opacity: clamp(0.16, calc(0.16 + var(--p) * var(--n) * 1.25 - var(--i)), 1);
@@ -2155,26 +2079,36 @@ p {
   color: var(--gold);
 }
 
-/* 4. Chapters over a slowly moving image */
+/* 4. Chapters over cross-fading backgrounds */
 .pin--chapters {
-  --h: 460svh;
+  --h: 520svh;
   --p: 0;
 }
-.chapters__img {
+.chapters__media {
   position: absolute;
   inset: 0;
+  background: var(--sunken);
+}
+.backdrop__layer {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  transition: opacity 0.9s var(--ease);
+}
+.backdrop__layer[data-on="true"] {
+  opacity: 1;
+}
+.backdrop__layer video,
+.backdrop__layer img {
   width: 100%;
   height: 100%;
   object-fit: cover;
-  object-position: 30% 50%;
-  transform: scale(calc(1 + var(--p) * 0.22)) translateX(calc(var(--p) * -3%));
-  will-change: transform;
 }
 .chapters__shade {
   position: absolute;
   inset: 0;
   background:
-    linear-gradient(270deg, rgba(6, 7, 8, 0.6) 0%, rgba(6, 7, 8, 0) 62%),
+    linear-gradient(270deg, rgba(6, 7, 8, 0.7) 0%, rgba(6, 7, 8, 0.08) 62%),
     linear-gradient(to top, rgba(6, 7, 8, 0.6), rgba(6, 7, 8, 0) 40%);
 }
 .chapters__body {
@@ -2190,19 +2124,29 @@ p {
   list-style: none;
   padding: 0;
   margin: 0;
-  width: min(100%, 27rem);
-  height: 24rem;
+  width: min(100%, 30rem);
+  height: 28rem;
 }
 .chapter {
   position: absolute;
-  inset: 0;
+  top: 50%;
+  left: 0;
+  right: 0;
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: flex-start;
   gap: 1rem;
+  padding: clamp(1.5rem, 3vw, 2.25rem);
+  border-radius: 30px;
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  background:
+    radial-gradient(70% 55% at 12% 0%, rgba(255, 255, 255, 0.12), rgba(255, 255, 255, 0) 70%), rgba(8, 9, 11, 0.5);
+  -webkit-backdrop-filter: blur(26px) saturate(1.6);
+  backdrop-filter: blur(26px) saturate(1.6);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.2), 0 30px 70px rgba(0, 0, 0, 0.4);
   opacity: 0;
-  transform: translateY(26px);
+  transform: translateY(calc(-50% + 26px));
   pointer-events: none;
   transition: opacity 0.6s var(--ease), transform 0.7s var(--ease);
 }
@@ -2212,10 +2156,10 @@ p {
   color: var(--gold);
 }
 .chapter h2 {
-  font-size: clamp(2.2rem, 5vw, 4.25rem);
+  font-size: clamp(2.2rem, 4.6vw, 3.9rem);
 }
 .chapter p {
-  color: rgba(241, 241, 238, 0.8);
+  color: rgba(241, 241, 238, 0.82);
   max-width: 38ch;
 }
 .chapter small {
@@ -2226,9 +2170,11 @@ p {
 .pin[data-step="0"] .chapter[data-i="0"],
 .pin[data-step="1"] .chapter[data-i="1"],
 .pin[data-step="2"] .chapter[data-i="2"],
-.pin[data-step="3"] .chapter[data-i="3"] {
+.pin[data-step="3"] .chapter[data-i="3"],
+.pin[data-step="4"] .chapter[data-i="4"],
+.pin--chapters:not([data-step]) .chapter[data-i="0"] {
   opacity: 1;
-  transform: none;
+  transform: translateY(-50%);
   pointer-events: auto;
 }
 .chapters__dots {
@@ -2238,24 +2184,20 @@ p {
   display: flex;
   gap: 0.5rem;
   padding: 0.6rem 0.75rem;
-  border-radius: 999px;
-  border: 1px solid var(--glass-edge);
-  background: var(--glass-fill);
-  -webkit-backdrop-filter: var(--glass-blur);
-  backdrop-filter: var(--glass-blur);
-  box-shadow: var(--glass-shadow);
 }
 .chapters__dots span {
   width: 0.5rem;
   height: 0.5rem;
   border-radius: 50%;
-  background: rgba(255, 255, 255, 0.28);
+  background: rgba(255, 255, 255, 0.3);
   transition: background-color 0.3s var(--ease), transform 0.3s var(--ease);
 }
 .pin[data-step="0"] .chapters__dots span:nth-child(1),
 .pin[data-step="1"] .chapters__dots span:nth-child(2),
 .pin[data-step="2"] .chapters__dots span:nth-child(3),
-.pin[data-step="3"] .chapters__dots span:nth-child(4) {
+.pin[data-step="3"] .chapters__dots span:nth-child(4),
+.pin[data-step="4"] .chapters__dots span:nth-child(5),
+.pin--chapters:not([data-step]) .chapters__dots span:nth-child(1) {
   background: var(--gold);
   transform: scale(1.35);
 }
@@ -2265,10 +2207,10 @@ p {
     padding-bottom: 6.5rem;
   }
   .chapters__list {
-    height: 22rem;
+    height: 25rem;
   }
   .chapters__shade {
-    background: linear-gradient(to top, rgba(6, 7, 8, 0.92) 0%, rgba(6, 7, 8, 0.5) 60%, rgba(6, 7, 8, 0.2) 100%);
+    background: linear-gradient(to top, rgba(6, 7, 8, 0.92) 0%, rgba(6, 7, 8, 0.55) 60%, rgba(6, 7, 8, 0.25) 100%);
   }
 }
 
@@ -2341,22 +2283,21 @@ p {
     padding-block: 6rem;
   }
   .intro__inner,
-  .intro__hint,
+  .intro__strip,
   .expand__lead,
   .expand__caption,
   .expand__shade {
     opacity: 1;
     transform: none;
   }
+  .intro__dim {
+    opacity: 0.5;
+  }
   .expand__lead {
     display: none;
   }
   .expand__frame {
     clip-path: none;
-  }
-  .expand__frame img,
-  .chapters__img {
-    transform: none;
   }
   .pin--chapters .chapters__list {
     height: auto;
@@ -2365,17 +2306,12 @@ p {
   }
   .chapter {
     position: relative;
+    top: auto;
     opacity: 1;
-    transform: none;
+    transform: none !important;
     pointer-events: auto;
   }
   .chapters__dots {
     display: none;
   }
-}
-
-.hero__buttons {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.75rem;
 }

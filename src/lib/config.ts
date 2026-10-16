@@ -8,7 +8,7 @@ export const site = {
   domain: "timy.studio",
   email: "contact@timy.studio",
   description:
-    "Automotive CGI and 3D animation. Photoreal car films, social cuts and stills, built in Blender.",
+    "Automotive CGI and 3D animation. Car films, stills, ads and Spotify Canvas, built in Blender.",
 };
 
 /**
@@ -18,7 +18,7 @@ export const site = {
 export const links: { label: string; href: string; group: string; icon: BrandName | null }[] = [
   { label: "TikTok", href: "https://www.tiktok.com/@timyedit", group: "social", icon: "tiktok" },
   { label: "Instagram", href: "https://www.instagram.com/timyedit", group: "social", icon: "instagram" },
-  { label: "YouTube", href: "https://www.youtube.com/@timyedits", group: "social", icon: "youtube" },
+  { label: "YouTube", href: "https://www.youtube.com/@timyedit", group: "social", icon: "youtube" },
   // Replace with your artist page, e.g. https://open.spotify.com/artist/<id> (this default opens a search for "timy.")
   { label: "Spotify", href: "https://open.spotify.com/search/timy.", group: "listen", icon: "spotify" },
   // Add the URL of your SoundCloud profile to show its logo:
@@ -54,26 +54,16 @@ export const works: { url: string; title?: string; thumb?: string }[] = [
   { url: "https://www.youtube.com/shorts/bmJBvJkbVNI" },
 ];
 
-/** Optional looping showreel for the hero (put the file in /public/media/). Leave empty to keep the plain hero. */
-export const heroReel = ""; // e.g. "/media/reel.mp4"
-
 /**
- * The service rows on the homepage. `type` must match an entry of projectTypes below:
- * it preselects that type on the brief form. `media` is optional: a short looping video (.mp4/.webm)
- * or an image from /public (e.g. "/media/car-film.mp4") that plays when the row is hovered.
+ * What you offer. It drives the strip on the first screen, the chapters of the scroll story and the
+ * links to the brief form. `type` must match an entry of projectTypes below: it preselects that type on the form.
  */
-export const services: { name: string; text: string; delivery: string; type: string; media?: string }[] = [
+export const services: { name: string; text: string; delivery: string; type: string }[] = [
   {
     name: "Car films",
     text: "A fully CG film of a car for a launch, a brand or an artist. Modelling clean-up, lighting, camera work, grade and sound sync.",
     delivery: "Landscape and vertical masters",
     type: "Car film",
-  },
-  {
-    name: "Social cuts",
-    text: "Short vertical loops and teasers made for TikTok, Reels and Shorts, from your car or from a model of mine.",
-    delivery: "Short vertical edits",
-    type: "Social cuts",
   },
   {
     name: "Stills",
@@ -82,10 +72,22 @@ export const services: { name: string; text: string; delivery: string; type: str
     type: "Stills",
   },
   {
-    name: "Visuals for music",
-    text: "Covers, visualizers and promo loops for a release, built around the track.",
-    delivery: "Loops, visualizers and covers",
-    type: "Visuals for music",
+    name: "Ads",
+    text: "Short ads for a car, a brand or a product, cut for TikTok, Reels, Shorts or the big screen.",
+    delivery: "Short edits in the formats you need",
+    type: "Ads",
+  },
+  {
+    name: "Spotify Canvas",
+    text: "The looping vertical visual that plays behind a track on Spotify, built around your release.",
+    delivery: "Seamless vertical loops",
+    type: "Spotify Canvas",
+  },
+  {
+    name: "And more",
+    text: "Cover art, visualizers, something that does not fit in a box. Describe it in a brief and we'll see what's possible.",
+    delivery: "Scoped together in the chat",
+    type: "Something else",
   },
 ];
 
@@ -123,13 +125,7 @@ export const faq = [
   },
 ];
 
-export const projectTypes = [
-  "Car film",
-  "Social cuts",
-  "Stills",
-  "Visuals for music",
-  "Something else",
-];
+export const projectTypes = ["Car film", "Stills", "Ads", "Spotify Canvas", "Something else"];
 
 // Budget choices on the brief form. Edit freely (values are stored as plain text).
 export const budgets = [

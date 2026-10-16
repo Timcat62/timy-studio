@@ -29,9 +29,6 @@ export function Header() {
           <Link href="/#services" className="nav__optional">
             Services
           </Link>
-          <Link href="/studio" className="nav__optional" aria-current={pathname === "/studio" ? "page" : undefined}>
-            Studio
-          </Link>
           <Link href="/about" aria-current={pathname === "/about" ? "page" : undefined}>
             About
           </Link>

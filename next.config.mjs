@@ -1,6 +1,10 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   poweredByHeader: false,
+  async redirects() {
+    // the scroll story is now the homepage
+    return [{ source: "/studio", destination: "/", permanent: true }];
+  },
   async headers() {
     return [
       {

@@ -18,9 +18,6 @@ export function Footer() {
                 <Link href="/#services">Services</Link>
               </li>
               <li>
-                <Link href="/studio">Studio</Link>
-              </li>
-              <li>
                 <Link href="/about">About and music</Link>
               </li>
               <li>

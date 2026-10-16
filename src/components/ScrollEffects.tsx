@@ -31,6 +31,7 @@ export function ScrollEffects() {
             ? clamp(-r.top / Math.max(1, r.height - vh))
             : clamp((vh * 0.85 - r.top) / (r.height + vh * 0.3));
         el.style.setProperty("--p", p.toFixed(4));
+        el.toggleAttribute("data-passed", p > 0.55);
         const n = Number(el.dataset.steps);
         if (n) el.dataset.step = String(Math.min(n - 1, Math.floor(p * n)));
       }
