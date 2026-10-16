@@ -8,6 +8,8 @@ const SELECTOR = ".btn, .social, .site-header__row, .chapters__dots, .yt__icon, 
 const TACTILE = ".btn, .social";
 
 const NS = "http://www.w3.org/2000/svg";
+/** How far red and blue drift apart at the edge (0 = no colour fringe, 0.2 = very strong). */
+const DISPERSION = 0.14;
 
 /**
  * Real refraction (the lens-like bending of whatever is behind the glass) needs SVG filters inside backdrop-filter,
@@ -162,13 +164,41 @@ export function LiquidGlass() {
         img.setAttribute("height", String(h));
         img.setAttribute("preserveAspectRatio", "none");
         img.setAttribute("result", "map");
-        const disp = document.createElementNS(NS, "feDisplacementMap");
-        disp.setAttribute("in", "SourceGraphic");
-        disp.setAttribute("in2", "map");
-        disp.setAttribute("scale", String(Math.round(bezel * 2.4)));
-        disp.setAttribute("xChannelSelector", "R");
-        disp.setAttribute("yChannelSelector", "G");
-        f.append(img, disp);
+        f.appendChild(img);
+        // Chromatic dispersion: each colour channel is bent by a slightly different amount, like light through a
+        // real lens. The map is neutral in the centre, so the colour fringes only show up along the edge.
+        const scale = bezel * 2.4;
+        const channels = [
+          { name: "r", k: 1 + DISPERSION, matrix: "1 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 1 0" },
+          { name: "g", k: 1, matrix: "0 0 0 0 0  0 1 0 0 0  0 0 0 0 0  0 0 0 1 0" },
+          { name: "b", k: 1 - DISPERSION, matrix: "0 0 0 0 0  0 0 0 0 0  0 0 1 0 0  0 0 0 1 0" },
+        ];
+        for (const c of channels) {
+          const disp = document.createElementNS(NS, "feDisplacementMap");
+          disp.setAttribute("in", "SourceGraphic");
+          disp.setAttribute("in2", "map");
+          disp.setAttribute("scale", (scale * c.k).toFixed(1));
+          disp.setAttribute("xChannelSelector", "R");
+          disp.setAttribute("yChannelSelector", "G");
+          disp.setAttribute("result", `d${c.name}`);
+          const only = document.createElementNS(NS, "feColorMatrix");
+          only.setAttribute("in", `d${c.name}`);
+          only.setAttribute("type", "matrix");
+          only.setAttribute("values", c.matrix);
+          only.setAttribute("result", c.name);
+          f.append(disp, only);
+        }
+        // screen-blending three single-channel images adds them back into one full-colour image
+        const rg = document.createElementNS(NS, "feBlend");
+        rg.setAttribute("in", "r");
+        rg.setAttribute("in2", "g");
+        rg.setAttribute("mode", "screen");
+        rg.setAttribute("result", "rg");
+        const rgb = document.createElementNS(NS, "feBlend");
+        rgb.setAttribute("in", "rg");
+        rgb.setAttribute("in2", "b");
+        rgb.setAttribute("mode", "screen");
+        f.append(rg, rgb);
         defs.appendChild(f);
         filters.set(key, id);
         return id;
@@ -183,7 +213,7 @@ export function LiquidGlass() {
         const radius = parseFloat(getComputedStyle(el).borderTopLeftRadius) || 0;
         const r = Math.min(radius, h / 2, w / 2) || Math.min(h, w) / 2;
         const id = filterFor(w, h, Math.round(r));
-        const value = `blur(1.5px) url(#${id}) saturate(2) brightness(1.3)`;
+        const value = `blur(0.5px) url(#${id}) saturate(1.5) brightness(1.04)`;
         el.style.setProperty("backdrop-filter", value);
         el.style.setProperty("-webkit-backdrop-filter", value);
       };
