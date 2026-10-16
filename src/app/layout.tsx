@@ -1,3 +1,4 @@
+import { PageViewTracker } from "@/components/PageViewTracker";
 import "@fontsource-variable/archivo/wdth.css";
 import "./globals.css";
 import type { Metadata, Viewport } from "next";
@@ -31,6 +32,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   return (
     <html lang="en">
       <body>
+	<PageViewTracker />
         <LiquidGlass />
         <Header />
         <main>{children}</main>
