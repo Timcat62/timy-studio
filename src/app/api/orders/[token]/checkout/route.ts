@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import { siteUrl } from "@/lib/format";
-import { isUuid } from "@/lib/orders";
+import { getOrderForViewer } from "@/lib/orders";
 import { stripe } from "@/lib/stripe";
 import { db } from "@/lib/supabase";
 
@@ -10,7 +10,8 @@ type Ctx = { params: Promise<{ token: string }> };
 
 export async function POST(req: Request, { params }: Ctx) {
   const { token } = await params;
-  if (!isUuid(token)) return NextResponse.json({ error: "Not found." }, { status: 404 });
+  const access = await getOrderForViewer(token);
+  if (access.status !== "ok") return NextResponse.json({ error: "Not found." }, { status: 404 });
 
   const body = (await req.json().catch(() => null)) as { accept?: boolean } | null;
   if (!body?.accept) {
@@ -20,7 +21,7 @@ export async function POST(req: Request, { params }: Ctx) {
   const { data: order } = await db()
     .from("orders")
     .select("id,email,project_type,status,quote_amount,quote_currency,quote_note")
-    .eq("token", token)
+    .eq("id", access.order.id)
     .maybeSingle();
   if (!order) return NextResponse.json({ error: "Not found." }, { status: 404 });
 

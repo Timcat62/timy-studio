@@ -1,6 +1,7 @@
 import { randomUUID } from "node:crypto";
 import { NextResponse } from "next/server";
 import { z } from "zod";
+import { currentUser } from "@/lib/auth";
 import { budgets, maxFileSizeMB, maxFiles, projectTypes } from "@/lib/config";
 import { safeFilename } from "@/lib/format";
 import { adminEmail, adminOrderLink, notifyDiscord, orderLink, sendEmail } from "@/lib/notify";
@@ -51,6 +52,10 @@ export async function POST(req: Request) {
   }
   const data = parsed.data;
 
+  // Signed in: the project belongs to the account, and the account's verified email is the contact address.
+  const user = await currentUser();
+  if (user?.email) data.email = user.email;
+
   // Cheap spam guard: bots fill the honeypot or submit instantly.
   if (data.elapsedMs < 2500) {
     return NextResponse.json({ error: "That was fast. Please take a moment and send it again." }, { status: 429 });
@@ -78,6 +83,7 @@ export async function POST(req: Request) {
       description: data.description,
       deadline: data.deadline || null,
       links: data.links || null,
+      user_id: user?.id ?? null,
     })
     .select("id,token")
     .single();
@@ -122,7 +128,10 @@ export async function POST(req: Request) {
     sendEmail(
       data.email,
       "Your brief to timy. is in",
-      `Hi ${data.name},\n\nThanks for your brief. This is your private page for the project, where we'll talk and, once we agree on a price, where you can pay:\n\n${orderLink(order.token)}\n\nKeep this link: anyone who has it can see the conversation.\n\ntimy.`,
+      `Hi ${data.name},\n\nThanks for your brief. This is your private page for the project, where we'll talk and, once we agree on a price, where you can pay:\n\n${orderLink(order.token)}\n\n` +
+        (user
+          ? "It's also in your account, and only you can open it once you're signed in.\n\ntimy."
+          : "Keep this link private. To find the project again easily and lock it to you, create an account with this email address.\n\ntimy."),
     ),
   ]);
 

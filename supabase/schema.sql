@@ -65,3 +65,9 @@ alter table attachments enable row level security;
 insert into storage.buckets (id, name, public)
 values ('briefs', 'briefs', false)
 on conflict (id) do nothing;
+
+-- Client accounts (Supabase Auth): a project can belong to an account.
+-- Safe to run again on an existing database.
+alter table orders add column if not exists user_id uuid references auth.users(id) on delete set null;
+create index if not exists orders_user_idx on orders(user_id);
+create index if not exists orders_email_idx on orders(lower(email));

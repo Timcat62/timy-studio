@@ -15,12 +15,26 @@ export const site = {
  * Your links. Entries with an icon are shown as small logos (footer and About page); entries without
  * an icon are shown as text. Entries with an empty href are hidden.
  */
+/**
+ * Spotify. Paste your artist page and the link of each release (in the Spotify app: ··· > Share > Copy link).
+ * Each cover on the About page opens its own link; a release without a link opens your artist page.
+ */
+export const spotifyArtistUrl = ""; // e.g. https://open.spotify.com/artist/xxxxxxxxxxxxxxxxxxxxxx
+export const spotifyReleases: Record<string, string> = {
+  HALO: "https://open.spotify.com/album/3lL9z243aCKmeMQ3bOTMDP",
+  ATREY: "https://open.spotify.com/album/6li3fPJh8FoClg3gJTjWV7",
+  ARYX: "https://open.spotify.com/album/1pZOFMDIJA4Axhk1ZTixbu",
+  ELARIS: "https://open.spotify.com/album/4FC0H2hlRZSrRnarpRR0X0",
+  NYTH: "https://open.spotify.com/album/5q7py3NPHjW7CBjidAhLbY",
+  "LEVITAÇÃO": "https://open.spotify.com/album/04w3wa84FZTXCSrlWRmFkK",
+  "ÓRBITA": "https://open.spotify.com/album/3ARpTEhr21GwfIXuJxQ0nO",
+};
+
 export const links: { label: string; href: string; group: string; icon: BrandName | null }[] = [
   { label: "TikTok", href: "https://www.tiktok.com/@timyedit", group: "social", icon: "tiktok" },
   { label: "Instagram", href: "https://www.instagram.com/timyedit", group: "social", icon: "instagram" },
   { label: "YouTube", href: "https://www.youtube.com/@timyedit", group: "social", icon: "youtube" },
-  // Replace with your artist page, e.g. https://open.spotify.com/artist/<id> (this default opens a search for "timy.")
-  { label: "Spotify", href: "https://open.spotify.com/search/timy.", group: "listen", icon: "spotify" },
+  { label: "Spotify", href: spotifyArtistUrl, group: "listen", icon: "spotify" },
   // Add the URL of your SoundCloud profile to show its logo:
   { label: "SoundCloud", href: "", group: "listen", icon: "soundcloud" },
   { label: "Apple Music", href: "http://music.apple.com/us/artist/timy/1882198272", group: "listen", icon: "applemusic" },
@@ -32,6 +46,20 @@ export const links: { label: string; href: string; group: string; icon: BrandNam
     icon: null,
   },
 ];
+
+/**
+ * Legal notice (/legal). Required by French law (LCEN) once you sell: fill address, phone and SIRET
+ * as soon as you have them. Empty fields are simply left out of the page.
+ */
+export const legal = {
+  name: "Timéo CATILLION",
+  status: "Entrepreneur individuel (micro-entreprise)",
+  address: "", // your business address, or a domiciliation address
+  phone: "",
+  siret: "", // shown as "registration in progress" while empty
+  vat: "VAT not applicable, article 293 B of the French General Tax Code (CGI).",
+  mediator: "", // consumer mediator (name + website), required before selling to consumers
+};
 
 export const linktreeUrl = "https://linktr.ee/timyedit";
 

@@ -154,7 +154,6 @@ export default async function Home() {
           <div className="section-head">
             <div className="section-head__main">
               <h2 className="h2">Recent work</h2>
-              <p className="lede">Press play to watch here. Nothing loads from YouTube until you do.</p>
             </div>
             <p className="caps section-head__meta">Work</p>
           </div>
@@ -263,7 +262,7 @@ export default async function Home() {
         <div className="cta__shade" aria-hidden="true" />
         <div className="wrap cta__body">
           <div className="cta__text">
-            <h2 className="display">Got a car and an idea?</h2>
+            <h2 className="display">Got an idea?</h2>
             <p>Send a brief. There's nothing to pay now: we talk first and agree on a price together.</p>
             <Link href="/start" className="btn btn--primary">
               Start a project <Icon name="arrow" />

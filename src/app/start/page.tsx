@@ -1,5 +1,7 @@
 import type { Metadata } from "next";
+import Link from "next/link";
 import { BriefForm } from "@/components/BriefForm";
+import { currentUser } from "@/lib/auth";
 import { maxFileSizeMB, maxFiles, projectTypes } from "@/lib/config";
 
 export const metadata: Metadata = {
@@ -10,6 +12,10 @@ export const metadata: Metadata = {
 export default async function Start({ searchParams }: { searchParams: Promise<{ type?: string }> }) {
   const { type } = await searchParams;
   const defaultType = projectTypes.includes(type ?? "") ? (type as string) : projectTypes[0];
+  const user = await currentUser();
+  const account = user?.email
+    ? { email: user.email, name: String(user.user_metadata?.name ?? user.user_metadata?.full_name ?? "") }
+    : null;
 
   return (
     <div className="wrap start-grid">
@@ -24,9 +30,22 @@ export default async function Start({ searchParams }: { searchParams: Promise<{ 
           <li>We talk it through in the chat, and settle scope, timing and price.</li>
           <li>Once you accept the price, you pay securely and I start.</li>
         </ol>
+        <p className="muted">
+          {account ? (
+            <>
+              Signed in as {account.email}. This project will be saved in{" "}
+              <Link href="/account" className="link-inline">your account</Link>.
+            </>
+          ) : (
+            <>
+              <Link href="/login?next=/start" className="link-inline">Sign in or create an account</Link> to keep all your
+              projects, messages and files in one place. You can also send the brief without one.
+            </>
+          )}
+        </p>
       </div>
       <div className="start-grid__form">
-        <BriefForm maxFiles={maxFiles} maxFileSizeMB={maxFileSizeMB} defaultType={defaultType} />
+        <BriefForm maxFiles={maxFiles} maxFileSizeMB={maxFileSizeMB} defaultType={defaultType} account={account} />
       </div>
     </div>
   );

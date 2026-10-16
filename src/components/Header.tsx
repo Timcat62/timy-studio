@@ -32,6 +32,9 @@ export function Header() {
           <Link href="/about" aria-current={pathname === "/about" ? "page" : undefined}>
             About
           </Link>
+          <Link href="/account" aria-current={pathname.startsWith("/account") || pathname === "/login" ? "page" : undefined}>
+            Account
+          </Link>
           <Link href="/start" className="btn btn--primary btn--small">
             Start a project
           </Link>

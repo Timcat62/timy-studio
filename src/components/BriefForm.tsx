@@ -12,11 +12,13 @@ interface Props {
   maxFiles: number;
   maxFileSizeMB: number;
   defaultType?: string;
+  /** Signed-in client: name and email are filled in, and the brief is added to their account. */
+  account?: { name: string; email: string } | null;
 }
 
 type Phase = "idle" | "sending" | "uploading";
 
-export function BriefForm({ maxFiles, maxFileSizeMB, defaultType }: Props) {
+export function BriefForm({ maxFiles, maxFileSizeMB, defaultType, account }: Props) {
   const router = useRouter();
   const startedAt = useRef(Date.now());
   const picker = useRef<HTMLInputElement>(null);
@@ -147,13 +149,23 @@ export function BriefForm({ maxFiles, maxFileSizeMB, defaultType }: Props) {
           <label className="label" htmlFor="name">
             Your name
           </label>
-          <input className="input" id="name" name="name" type="text" autoComplete="name" required maxLength={100} />
+          <input className="input" id="name" name="name" type="text" autoComplete="name" required maxLength={100} defaultValue={account?.name} />
         </div>
         <div className="field">
           <label className="label" htmlFor="email">
             Email
           </label>
-          <input className="input" id="email" name="email" type="email" autoComplete="email" required maxLength={200} />
+          <input
+            className="input"
+            id="email"
+            name="email"
+            type="email"
+            autoComplete="email"
+            required
+            maxLength={200}
+            defaultValue={account?.email}
+            readOnly={Boolean(account)}
+          />
         </div>
       </div>
 

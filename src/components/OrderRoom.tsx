@@ -13,9 +13,10 @@ interface Props {
   token: string;
   initial: OrderState;
   justPaid: boolean;
+  signedIn: boolean;
 }
 
-export function OrderRoom({ token, initial, justPaid }: Props) {
+export function OrderRoom({ token, initial, justPaid, signedIn }: Props) {
   const [state, setState] = useState<OrderState>(initial);
   const [accept, setAccept] = useState(false);
   const [paying, setPaying] = useState(false);
@@ -81,8 +82,20 @@ export function OrderRoom({ token, initial, justPaid }: Props) {
           Hi {order.name.split(" ")[0]}, this is your project.
         </h1>
         <p className="lede">
-          {order.project_type} · sent {formatDate(order.created_at)}. Keep this page's link: it's how you come back to the
-          conversation.
+          {order.project_type} · sent {formatDate(order.created_at)}.{" "}
+          {signedIn ? (
+            <>
+              All your projects are in <Link href="/account" className="link-inline">your account</Link>.
+            </>
+          ) : (
+            <>
+              To find it again easily,{" "}
+              <Link href={`/login?next=/order/${token}`} className="link-inline">
+                create an account
+              </Link>{" "}
+              with the email you used for this brief: the project is added to it automatically and only you can open it.
+            </>
+          )}
         </p>
       </div>
 
@@ -116,7 +129,8 @@ export function OrderRoom({ token, initial, justPaid }: Props) {
               <label className="check" style={{ marginTop: "1.25rem" }}>
                 <input type="checkbox" checked={accept} onChange={(e) => setAccept(e.target.checked)} />
                 <span>
-                  I accept this price and the <Link href="/legal#terms" target="_blank">terms</Link>.
+                  I accept this price and the <Link href="/legal#terms" target="_blank">terms</Link>, and I ask for work to
+                  start right after payment, within the withdrawal period.
                 </span>
               </label>
               {payError ? (
@@ -193,7 +207,17 @@ export function OrderRoom({ token, initial, justPaid }: Props) {
                     <ul className="attach">
                       {attachments.map((a) => (
                         <li key={a.id}>
-                          <span style={{ overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{a.filename}</span>
+                          {a.url ? (
+                            <a
+                              className="link-inline"
+                              href={a.url}
+                              style={{ overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}
+                            >
+                              {a.filename}
+                            </a>
+                          ) : (
+                            <span style={{ overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{a.filename}</span>
+                          )}
                           <span className="muted num">{formatSize(a.size)}</span>
                         </li>
                       ))}

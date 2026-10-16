@@ -1,4 +1,4 @@
-import { appleArtistIds, releasesFallback, spotifyArtistId } from "./config";
+import { appleArtistIds, releasesFallback, spotifyArtistId, spotifyArtistUrl, spotifyReleases } from "./config";
 
 export interface Release {
   title: string;
@@ -7,7 +7,11 @@ export interface Release {
   href?: string;
 }
 
-const spotifySearch = (title: string) => `https://open.spotify.com/search/${encodeURIComponent(`${title} timy.`)}`;
+const fold = (t: string) => t.normalize("NFKD").replace(/[̀-ͯ]/g, "").trim().toLowerCase();
+const releaseLinks = new Map(Object.entries(spotifyReleases).filter(([, url]) => url).map(([t, url]) => [fold(t), url]));
+
+/** The Spotify link of a release from config.ts, or the artist page. Never a search page. */
+const spotifyLink = (title: string) => releaseLinks.get(fold(title)) || spotifyArtistUrl || undefined;
 
 /* ---------- Spotify (direct links, needs a free developer app) ---------- */
 
@@ -66,7 +70,7 @@ async function fromSpotify(): Promise<Release[] | null> {
         title: a.name,
         year: a.release_date?.slice(0, 4),
         art: img?.url,
-        href: a.external_urls?.spotify ?? spotifySearch(a.name),
+        href: a.external_urls?.spotify ?? spotifyLink(a.name),
         date: a.release_date ? Date.parse(a.release_date) : 0,
       });
     }
@@ -103,7 +107,7 @@ async function fromApple(): Promise<Release[]> {
           title,
           year: item.releaseDate?.slice(0, 4),
           art: item.artworkUrl100?.replace("100x100bb", "300x300bb"),
-          href: spotifySearch(title),
+          href: spotifyLink(title),
           date: item.releaseDate ? Date.parse(item.releaseDate) : 0,
         });
       }
@@ -119,5 +123,5 @@ export async function getReleases(): Promise<Release[]> {
   const spotify = await fromSpotify();
   if (spotify && spotify.length) return spotify;
   const apple = await fromApple();
-  return apple.length ? apple : releasesFallback.map((r) => ({ ...r, href: r.href ?? spotifySearch(r.title) }));
+  return apple.length ? apple : releasesFallback.map((r) => ({ ...r, href: r.href ?? spotifyLink(r.title) }));
 }

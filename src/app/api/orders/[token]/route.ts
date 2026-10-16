@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import { z } from "zod";
 import { adminEmail, adminOrderLink, notifyDiscord, sendEmail } from "@/lib/notify";
-import { addMessage, getAttachments, getMessages, getPublicOrderByToken } from "@/lib/orders";
+import { addMessage, getAttachments, getMessages, getOrderForViewer } from "@/lib/orders";
 import { db } from "@/lib/supabase";
 
 export const runtime = "nodejs";
@@ -11,8 +11,10 @@ type Ctx = { params: Promise<{ token: string }> };
 
 export async function GET(_req: Request, { params }: Ctx) {
   const { token } = await params;
-  const order = await getPublicOrderByToken(token);
-  if (!order) return NextResponse.json({ error: "Not found." }, { status: 404 });
+  const access = await getOrderForViewer(token);
+  if (access.status === "login") return NextResponse.json({ error: "Sign in to see this project." }, { status: 401 });
+  if (access.status !== "ok") return NextResponse.json({ error: "Not found." }, { status: 404 });
+  const { order } = access;
   const [messages, attachments] = await Promise.all([getMessages(order.id), getAttachments(order.id)]);
   return NextResponse.json({ order, messages, attachments });
 }
@@ -21,8 +23,10 @@ const messageSchema = z.object({ body: z.string().trim().min(1).max(4000) });
 
 export async function POST(req: Request, { params }: Ctx) {
   const { token } = await params;
-  const order = await getPublicOrderByToken(token);
-  if (!order) return NextResponse.json({ error: "Not found." }, { status: 404 });
+  const access = await getOrderForViewer(token);
+  if (access.status === "login") return NextResponse.json({ error: "Sign in to see this project." }, { status: 401 });
+  if (access.status !== "ok") return NextResponse.json({ error: "Not found." }, { status: 404 });
+  const { order } = access;
 
   const parsed = messageSchema.safeParse(await req.json().catch(() => null));
   if (!parsed.success) return NextResponse.json({ error: "Write a message first." }, { status: 400 });

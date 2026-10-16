@@ -1774,32 +1774,34 @@ p {
 .btn--primary,
 .btn--accent {
   color: #fff;
-  text-shadow: 0 1px 10px rgba(0, 0, 0, 0.4);
+  text-shadow: 0 1px 8px rgba(0, 0, 0, 0.35);
+  /* satin rather than gloss: an even gold tint, a soft top light, no hard specular line */
   background:
-    radial-gradient(60% 95% at 16% 0%, rgba(255, 244, 214, 0.38), rgba(255, 255, 255, 0) 62%),
-    radial-gradient(55% 85% at 88% 115%, rgba(255, 220, 140, 0.24), rgba(255, 255, 255, 0) 62%),
-    rgba(214, 172, 84, 0.17);
+    linear-gradient(180deg, rgba(255, 236, 196, 0.12), rgba(255, 236, 196, 0) 60%),
+    rgba(201, 162, 90, 0.26);
   box-shadow:
-    inset 0 0 0 1px rgba(255, 236, 190, 0.1),
-    inset 0 1.5px 2px -0.5px rgba(255, 240, 200, 0.7),
-    inset 0 -1.5px 2px -0.5px rgba(255, 220, 140, 0.3),
-    inset 0 0 18px rgba(228, 196, 126, 0.16),
-    0 0 34px rgba(201, 162, 90, 0.24),
-    0 8px 24px rgba(0, 0, 0, 0.32);
+    inset 0 0 0 1px rgba(255, 230, 180, 0.12),
+    inset 0 1px 1px rgba(255, 240, 210, 0.22),
+    0 0 22px rgba(201, 162, 90, 0.14),
+    0 8px 22px rgba(0, 0, 0, 0.3);
+}
+.btn--primary::before,
+.btn--accent::before {
+  opacity: 0.45;
 }
 .btn--primary:active:not(:disabled),
 .btn--primary.is-pressed,
 .btn--accent:active:not(:disabled),
 .btn--accent.is-pressed {
   background:
-    linear-gradient(180deg, rgba(255, 244, 214, 0.42) 0%, rgba(255, 255, 255, 0.05) 55%), rgba(228, 190, 100, 0.5);
+    linear-gradient(180deg, rgba(255, 236, 196, 0.18), rgba(255, 236, 196, 0.02) 60%),
+    rgba(214, 176, 98, 0.4);
   box-shadow:
-    inset 0 0 0 1px rgba(255, 236, 190, 0.2),
-    inset 0 2px 3px -0.5px rgba(255, 244, 214, 0.9),
-    inset 0 -2px 3px -0.5px rgba(255, 220, 140, 0.45),
-    inset 0 0 30px rgba(255, 224, 150, 0.4),
-    0 0 52px rgba(214, 172, 84, 0.45),
-    0 10px 28px rgba(0, 0, 0, 0.32);
+    inset 0 0 0 1px rgba(255, 230, 180, 0.18),
+    inset 0 1px 2px rgba(255, 240, 210, 0.35),
+    inset 0 0 20px rgba(255, 220, 150, 0.16),
+    0 0 34px rgba(214, 172, 84, 0.26),
+    0 10px 26px rgba(0, 0, 0, 0.32);
 }
 .btn--ghost {
   color: var(--text);
@@ -2318,4 +2320,44 @@ p {
   .chapters__dots {
     display: none;
   }
+}
+
+/* ---------------- Accounts ---------------- */
+
+.auth {
+  max-width: 26rem;
+}
+.auth__title {
+  font-size: clamp(1.75rem, 4vw, 2.5rem);
+  margin-bottom: 0.5rem;
+}
+.auth__google {
+  width: 100%;
+  justify-content: center;
+  gap: 0.6rem;
+}
+.auth__or {
+  display: flex;
+  align-items: center;
+  gap: 0.9rem;
+  color: var(--faint);
+  font-size: 0.8rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+.auth__or::before,
+.auth__or::after {
+  content: "";
+  flex: 1;
+  height: 1px;
+  background: var(--line-strong);
+}
+.auth__switch button {
+  padding: 0;
+  border: 0;
+  background: none;
+  font: inherit;
+  cursor: pointer;
+  text-decoration: underline;
+  text-underline-offset: 0.2em;
 }
