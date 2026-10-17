@@ -17,6 +17,7 @@ export interface Product {
   price_cents: number;
   currency: string;
   thumb_path: string | null;
+  images: string[];
   published: boolean;
   created_at: string;
   updated_at: string;
@@ -41,11 +42,21 @@ export interface Purchase {
   created_at: string;
 }
 
-const PRODUCT_COLUMNS = "id,slug,title,summary,description,price_cents,currency,thumb_path,published,created_at,updated_at";
+const PRODUCT_COLUMNS = "id,slug,title,summary,description,price_cents,currency,thumb_path,images,published,created_at,updated_at";
 
 /** Public URL of a product's cover, with the edit date so a new cover is not hidden by the cache. */
 export function thumbUrl(p: Pick<Product, "id" | "thumb_path" | "updated_at">) {
   return p.thumb_path ? `/api/shop/thumb/${p.id}?v=${Date.parse(p.updated_at) || 0}` : null;
+}
+
+export const MAX_GALLERY_IMAGES = 12;
+
+/** Every image of a product, the cover first, then the preview images. */
+export function galleryUrls(p: Pick<Product, "id" | "thumb_path" | "images" | "updated_at">) {
+  const v = Date.parse(p.updated_at) || 0;
+  const cover = thumbUrl(p);
+  const rest = (p.images ?? []).map((_, i) => `/api/shop/thumb/${p.id}?img=${i}&v=${v}`);
+  return cover ? [cover, ...rest] : rest;
 }
 
 export function slugify(text: string) {

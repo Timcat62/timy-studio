@@ -5,6 +5,7 @@ import type { Metadata, Viewport } from "next";
 import { Footer } from "@/components/Footer";
 import { LiquidGlass } from "@/components/LiquidGlass";
 import { Header } from "@/components/Header";
+import { NavProgress } from "@/components/NavProgress";
 import { site } from "@/lib/config";
 import { siteUrl } from "@/lib/format";
 
@@ -33,6 +34,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
     <html lang="en">
       <body>
 	<PageViewTracker />
+        <NavProgress />
         <LiquidGlass />
         <Header />
         <main>{children}</main>

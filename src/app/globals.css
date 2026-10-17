@@ -1502,11 +1502,12 @@ p {
     radial-gradient(70% 90% at 100% 100%, rgba(201, 162, 90, 0.14), transparent 70%),
     var(--raised);
 }
+/* normal width and a lighter weight: a price should read calm and precise, not shout */
 .price {
-  font-stretch: 125%;
-  font-weight: 720;
-  font-size: clamp(2.2rem, 4.4vw, 3.25rem);
-  letter-spacing: -0.035em;
+  font-stretch: 100%;
+  font-weight: 560;
+  font-size: clamp(2rem, 3.6vw, 2.6rem);
+  letter-spacing: -0.02em;
   line-height: 1.05;
   font-variant-numeric: tabular-nums;
 }
@@ -1912,7 +1913,8 @@ p {
   flex: 1;
   min-width: 0;
   height: 3.5rem;
-  padding: 0.4rem 0.45rem 0.4rem 1.5rem;
+  /* the same gap on the right of the Start button as above and below it */
+  padding: 0.4rem 0.66rem 0.4rem 1.5rem;
   border-radius: 999px;
 }
 .site-header[data-scrolled="true"] .site-header__row {
@@ -2089,62 +2091,6 @@ p {
   border-top: 1px solid rgba(255, 255, 255, 0.14);
   background: linear-gradient(to top, rgba(6, 7, 8, 0.7), rgba(6, 7, 8, 0.25));
   opacity: clamp(0, calc(1.4 - var(--p) * 3), 1);
-}
-
-/* 2. A video that grows to fill the screen */
-.pin--expand {
-  --h: 340svh;
-  --p: 0;
-}
-.expand__stage {
-  --e: clamp(0, calc(var(--p) * 1.6), 1);
-  background: var(--ground);
-}
-.expand__lead {
-  position: absolute;
-  top: clamp(5.5rem, 13vh, 7.5rem);
-  left: 0;
-  right: 0;
-  text-align: center;
-  padding-inline: var(--gutter);
-  font-stretch: 118%;
-  font-weight: 600;
-  font-size: clamp(1.2rem, 2.6vw, 2rem);
-  letter-spacing: -0.02em;
-  opacity: clamp(0, calc(1.2 - var(--p) * 9), 1);
-}
-.expand__frame {
-  position: absolute;
-  inset: 0;
-  background: var(--sunken);
-  clip-path: inset(
-    calc((1 - var(--e)) * 27svh) calc((1 - var(--e)) * 17vw) calc((1 - var(--e)) * 12svh) round calc((1 - var(--e)) * 34px)
-  );
-  will-change: clip-path;
-}
-.expand__frame video {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  object-position: 50% 55%;
-}
-.expand__shade {
-  position: absolute;
-  inset: 0;
-  background: linear-gradient(to top, rgba(6, 7, 8, 0.85), rgba(6, 7, 8, 0) 55%);
-  opacity: clamp(0, calc((var(--p) - 0.4) * 3), 1);
-}
-.expand__caption {
-  position: absolute;
-  left: 0;
-  right: 0;
-  bottom: clamp(2rem, 9vh, 5rem);
-  opacity: clamp(0, calc((var(--p) - 0.62) * 5), 1);
-  transform: translateY(calc((1 - clamp(0, calc((var(--p) - 0.62) * 5), 1)) * 28px));
-}
-.expand__caption h2 {
-  font-size: clamp(2rem, 6vw, 5.5rem);
-  max-width: 14ch;
 }
 
 /* 3. Statement, lit word by word */
@@ -2380,21 +2326,12 @@ p {
     padding-block: 6rem;
   }
   .intro__inner,
-  .intro__strip,
-  .expand__lead,
-  .expand__caption,
-  .expand__shade {
+  .intro__strip {
     opacity: 1;
     transform: none;
   }
   .intro__dim {
     opacity: 0.5;
-  }
-  .expand__lead {
-    display: none;
-  }
-  .expand__frame {
-    clip-path: none;
   }
   .pin--chapters .chapters__list {
     height: auto;
@@ -2660,9 +2597,15 @@ p {
   .process__shot {
     display: none;
   }
+  /* each step gets most of a screen, so the phone next to it stays on one screenshot while you read it */
+  .process__list > li {
+    min-height: 52svh;
+  }
   .process-shots {
+    --shot-h: min(36rem, calc(100svh - var(--header-h) - 7rem));
     position: sticky;
-    top: calc(var(--header-h) + 2rem);
+    /* in the middle of the screen, under the header */
+    top: max(calc(var(--header-h) + 1rem), calc(50svh - var(--shot-h) / 2 - 0.9rem));
     display: grid;
     justify-items: center;
     gap: 1.1rem;
@@ -2671,7 +2614,8 @@ p {
   /* a phone-shaped frame; the screenshots cross-fade inside it */
   .process-shots__screen {
     position: relative;
-    width: min(19rem, 100%);
+    height: var(--shot-h);
+    max-width: 100%;
     aspect-ratio: 600 / 1140;
     overflow: hidden;
     border-radius: 30px;
@@ -2889,14 +2833,54 @@ p {
   grid-template-columns: repeat(auto-fill, minmax(min(100%, 17rem), 1fr));
 }
 .product-card {
+  position: relative;
   display: block;
+  height: 100%;
+  padding: 0.55rem 0.55rem 1.1rem;
+  border-radius: calc(var(--radius) + 6px);
   text-decoration: none;
+  background: linear-gradient(160deg, rgba(255, 255, 255, 0.045), rgba(255, 255, 255, 0.012) 45%);
+  -webkit-backdrop-filter: blur(10px) saturate(140%);
+  backdrop-filter: blur(10px) saturate(140%);
+  box-shadow: 0 18px 40px rgba(0, 0, 0, 0.35);
+  transition: transform 0.6s var(--ease), box-shadow 0.6s var(--ease);
+}
+/* thin glass rim, brighter on the top left like light catching an edge */
+.product-card::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  padding: 1px;
+  border-radius: inherit;
+  pointer-events: none;
+  background: linear-gradient(
+    150deg,
+    rgba(255, 255, 255, 0.34),
+    rgba(255, 255, 255, 0.05) 30%,
+    rgba(255, 255, 255, 0.02) 60%,
+    rgba(228, 196, 126, 0.22)
+  );
+  -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor;
+  mask: linear-gradient(#000 0 0) content-box exclude, linear-gradient(#000 0 0);
+}
+.product-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 26px 50px rgba(0, 0, 0, 0.45);
+}
+.product-card:hover::before {
+  background: linear-gradient(
+    150deg,
+    rgba(255, 255, 255, 0.5),
+    rgba(255, 255, 255, 0.08) 30%,
+    rgba(255, 255, 255, 0.03) 60%,
+    rgba(228, 196, 126, 0.35)
+  );
 }
 .product-card__media {
   aspect-ratio: 4 / 3;
   overflow: hidden;
   border-radius: var(--radius);
-  border: 1px solid var(--line);
   background: var(--raised);
 }
 .product-card__media img {
@@ -2912,6 +2896,7 @@ p {
   display: grid;
   gap: 0.3rem;
   margin-top: 0.9rem;
+  padding-inline: 0.5rem;
 }
 .product-card__title {
   font-weight: 600;
@@ -2939,13 +2924,6 @@ p {
     position: sticky;
     top: calc(var(--header-h) + 1.5rem);
   }
-}
-.product__media img {
-  width: 100%;
-  aspect-ratio: 4 / 3;
-  object-fit: cover;
-  border-radius: var(--radius);
-  border: 1px solid var(--line);
 }
 .product__info {
   display: grid;
@@ -3097,4 +3075,381 @@ p {
   font: inherit;
   cursor: pointer;
   color: var(--danger);
+}
+
+/* ---------------- Page loading ---------------- */
+
+.nav-progress {
+  position: fixed;
+  inset: 0 0 auto;
+  z-index: 200;
+  height: 2px;
+  pointer-events: none;
+  background: linear-gradient(90deg, rgba(228, 196, 126, 0), var(--accent-text) 70%, #fff6dc);
+  box-shadow: 0 0 12px rgba(228, 196, 126, 0.7);
+  transform-origin: left;
+  transform: scaleX(0);
+  opacity: 0;
+}
+/* runs fast at first, then slows down, and only reaches the end once the page is there */
+.nav-progress[data-state="loading"] {
+  opacity: 1;
+  animation: nav-progress 8s cubic-bezier(0.08, 0.8, 0.2, 1) forwards;
+}
+.nav-progress[data-state="done"] {
+  transform: scaleX(1);
+  opacity: 0;
+  transition: transform 0.2s ease-out, opacity 0.35s 0.15s ease;
+}
+@keyframes nav-progress {
+  0% {
+    transform: scaleX(0);
+  }
+  10% {
+    transform: scaleX(0.35);
+  }
+  100% {
+    transform: scaleX(0.92);
+  }
+}
+.page-loading {
+  min-height: 70svh;
+  display: grid;
+  place-items: center;
+}
+/* only shows if the page really takes a moment */
+.page-loading__ring {
+  width: 2.2rem;
+  height: 2.2rem;
+  border-radius: 999px;
+  border: 1.5px solid rgba(255, 255, 255, 0.08);
+  border-top-color: var(--accent-text);
+  opacity: 0;
+  animation:
+    spin 0.9s linear infinite,
+    appear 0.3s ease 0.25s forwards;
+}
+@keyframes spin {
+  to {
+    rotate: 360deg;
+  }
+}
+@keyframes appear {
+  to {
+    opacity: 1;
+  }
+}
+
+/* ---------------- Made in Blender: the wide screen ---------------- */
+
+.cinema {
+  --p: 1;
+  padding-block: clamp(5rem, 12vw, 9rem);
+  overflow-x: clip;
+}
+.cinema__head {
+  display: grid;
+  gap: 0.6rem;
+  margin-bottom: clamp(2rem, 4vw, 3rem);
+}
+.cinema__lead {
+  margin: 0;
+  color: var(--accent-text);
+  font-weight: 600;
+  font-size: clamp(1rem, 1.6vw, 1.2rem);
+}
+.cinema__head h2 {
+  margin: 0;
+  font-size: clamp(2.2rem, 6vw, 5rem);
+  max-width: 16ch;
+}
+/* the screen starts tipped back and a little lower, and settles flat as it comes up the page */
+.cinema__frame {
+  --e: clamp(0, calc(var(--p) * 2.2), 1);
+  position: relative;
+  aspect-ratio: 21 / 9;
+  overflow: hidden;
+  border-radius: clamp(18px, 2.4vw, 32px);
+  background: var(--sunken);
+  box-shadow:
+    0 0 0 1px rgba(255, 255, 255, 0.07),
+    0 50px 120px rgba(0, 0, 0, 0.6);
+  transform: perspective(1400px) rotateX(calc((1 - var(--e)) * 16deg)) translateY(calc((1 - var(--e)) * 50px));
+  transform-origin: 50% 100%;
+  opacity: calc(0.25 + var(--e) * 0.75);
+  will-change: transform;
+}
+/* light from above catching the top edge of the screen */
+.cinema__frame::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  pointer-events: none;
+  background: linear-gradient(to bottom, rgba(255, 255, 255, 0.07), transparent 18%);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.18);
+}
+/* the film drifts slowly inside the screen, like looking through a window */
+.cinema__video {
+  position: absolute;
+  top: -8%;
+  left: 0;
+  width: 100%;
+  height: 116%;
+  object-fit: cover;
+  transform: translateY(calc((0.5 - var(--p)) * 9%));
+}
+.cinema__tag {
+  position: absolute;
+  z-index: 1;
+  left: 1.1rem;
+  bottom: 1rem;
+  padding: 0.35rem 0.75rem;
+  border-radius: 999px;
+  background: rgba(6, 7, 8, 0.55);
+  -webkit-backdrop-filter: blur(10px);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  font-size: 0.78rem;
+  color: var(--text);
+}
+@media (max-width: 40rem) {
+  .cinema__frame {
+    aspect-ratio: 4 / 5;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .cinema__frame,
+  .cinema__video {
+    transform: none;
+    opacity: 1;
+  }
+}
+
+/* ---------------- Shop: product images ---------------- */
+
+.gallery {
+  position: relative;
+  border-radius: var(--radius);
+  outline-offset: 4px;
+}
+.gallery__track {
+  display: flex;
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  scrollbar-width: none;
+  border-radius: var(--radius);
+  background: var(--sunken);
+  box-shadow: 0 0 0 1px var(--line);
+}
+.gallery__track::-webkit-scrollbar {
+  display: none;
+}
+.gallery__slide {
+  flex: 0 0 100%;
+  aspect-ratio: 4 / 3;
+  scroll-snap-align: start;
+  display: grid;
+  place-items: center;
+}
+.gallery__slide img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  user-select: none;
+}
+.gallery__slide:first-child img {
+  object-fit: cover;
+}
+.social.gallery__arrow {
+  position: absolute;
+  top: 50%;
+  width: 2.75rem;
+  height: 2.75rem;
+  margin-top: -1.375rem;
+  color: var(--text);
+}
+.social.gallery__arrow:hover {
+  color: var(--text);
+  background: var(--glass-body);
+}
+.gallery__arrow svg {
+  width: 1.1rem;
+  height: 1.1rem;
+}
+.gallery__arrow--prev {
+  left: 0.75rem;
+}
+.gallery__arrow--prev svg {
+  rotate: 180deg;
+}
+.gallery__arrow--next {
+  right: 0.75rem;
+}
+.gallery__dots {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0.8rem;
+  display: flex;
+  justify-content: center;
+  gap: 0.4rem;
+  pointer-events: none;
+}
+.gallery__dots span {
+  width: 6px;
+  height: 6px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.35);
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.5);
+  transition: width 0.35s var(--ease), background-color 0.35s var(--ease);
+}
+.gallery__dots span[data-on="true"] {
+  width: 18px;
+  background: #fff;
+}
+.editor__gallery {
+  list-style: none;
+  margin: 0 0 0.9rem;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.6rem;
+}
+.editor__gallery img {
+  display: block;
+  width: 100%;
+  aspect-ratio: 4 / 3;
+  object-fit: cover;
+  border-radius: 10px;
+  border: 1px solid var(--line);
+}
+.editor__gallery-tools {
+  display: flex;
+  justify-content: center;
+  gap: 0.2rem;
+  margin-top: 0.25rem;
+}
+
+/* ---------------- Price estimator and breakdown ---------------- */
+
+.estimator__toggle {
+  justify-self: start;
+}
+.estimator {
+  display: grid;
+  gap: 0.95rem;
+  padding: 1rem;
+  border-radius: 14px;
+  border: 1px solid var(--line-strong);
+  background: rgba(255, 255, 255, 0.02);
+}
+.estimator__row {
+  display: grid;
+  gap: 0.4rem;
+}
+.estimator__row .label {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+}
+.estimator__value {
+  color: var(--accent-text);
+  font-weight: 500;
+  text-align: right;
+}
+.range {
+  --fill: 50%;
+  appearance: none;
+  -webkit-appearance: none;
+  width: 100%;
+  height: 4px;
+  margin: 0.4rem 0;
+  border-radius: 999px;
+  background: linear-gradient(to right, var(--accent) var(--fill), var(--line-strong) var(--fill));
+  cursor: pointer;
+}
+.range::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  width: 18px;
+  height: 18px;
+  border-radius: 999px;
+  background: var(--text);
+  box-shadow:
+    0 0 0 4px rgba(228, 196, 126, 0.18),
+    0 2px 6px rgba(0, 0, 0, 0.5);
+}
+.range::-moz-range-thumb {
+  width: 18px;
+  height: 18px;
+  border: 0;
+  border-radius: 999px;
+  background: var(--text);
+  box-shadow:
+    0 0 0 4px rgba(228, 196, 126, 0.18),
+    0 2px 6px rgba(0, 0, 0, 0.5);
+}
+.range:focus-visible {
+  outline: 2px solid var(--accent-text);
+  outline-offset: 6px;
+}
+.segmented {
+  display: inline-flex;
+  justify-self: start;
+  padding: 3px;
+  border-radius: 999px;
+  border: 1px solid var(--line-strong);
+}
+.segmented button {
+  padding: 0.35rem 0.95rem;
+  border: 0;
+  border-radius: 999px;
+  background: none;
+  color: var(--muted);
+  font: inherit;
+  font-size: 0.85rem;
+  cursor: pointer;
+}
+.segmented button[aria-pressed="true"] {
+  background: var(--line-strong);
+  color: var(--text);
+}
+.breakdown {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  font-size: 0.9rem;
+}
+.breakdown li {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 0.45rem 0;
+  border-bottom: 1px dashed var(--line-strong);
+}
+.breakdown li span:first-child {
+  color: var(--muted);
+}
+.breakdown li .num {
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+.breakdown li.breakdown__total {
+  border-bottom: 0;
+  font-weight: 600;
+}
+.breakdown li.breakdown__total span:first-child {
+  color: var(--text);
+}
+.breakdown-box {
+  margin-top: 1rem;
+}
+.breakdown-box summary {
+  cursor: pointer;
+  color: var(--accent-text);
+  font-size: 0.9rem;
+}
+.breakdown-box[open] summary {
+  margin-bottom: 0.5rem;
 }

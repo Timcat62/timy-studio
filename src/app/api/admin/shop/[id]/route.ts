@@ -1,3 +1,4 @@
+import { revalidatePath } from "next/cache";
 import { z } from "zod";
 import { isAdmin } from "@/lib/admin-auth";
 import { removeFolder } from "@/lib/disk";
@@ -59,6 +60,7 @@ export async function PATCH(req: Request, { params }: Ctx) {
     })
     .eq("id", id);
   if (error) return Response.json({ error: "Could not save." }, { status: 500 });
+  revalidatePath("/shop");
   return Response.json({ ok: true, slug });
 }
 
@@ -69,5 +71,6 @@ export async function DELETE(_req: Request, { params }: Ctx) {
   if (!isUuid(id)) return Response.json({ error: "Not found." }, { status: 404 });
   await db().from("products").delete().eq("id", id);
   await removeFolder("shop", id);
+  revalidatePath("/shop");
   return Response.json({ ok: true });
 }

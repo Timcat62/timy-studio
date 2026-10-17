@@ -3,7 +3,7 @@ import { db } from "./supabase";
 import type { AdminOrder, AdminOrderState, Attachment, Message, PublicOrder, Sender } from "./types";
 
 export const PUBLIC_COLUMNS =
-  "id,name,project_type,budget,description,deadline,links,status,quote_amount,quote_currency,quote_note,paid_at,created_at";
+  "id,name,project_type,budget,description,deadline,links,status,quote_amount,quote_currency,quote_note,quote_breakdown,paid_at,created_at";
 
 const UUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
 export const isUuid = (v: string) => UUID.test(v);
@@ -74,7 +74,7 @@ export async function addMessage(orderId: string, sender: Sender, body: string) 
 }
 
 const ADMIN_COLUMNS =
-  "id,token,name,email,project_type,budget,description,deadline,links,status,quote_amount,quote_currency,quote_note,paid_at,created_at,stripe_session_id";
+  "id,token,name,email,project_type,budget,description,deadline,links,status,quote_amount,quote_currency,quote_note,quote_breakdown,paid_at,created_at,stripe_session_id";
 
 /** Full order for the admin: includes the client's email and the files. */
 export async function loadAdminState(id: string): Promise<AdminOrderState | null> {

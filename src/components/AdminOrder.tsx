@@ -5,7 +5,9 @@ import { useCallback, useState } from "react";
 import { formatDate, formatMoney, formatSize } from "@/lib/format";
 import { uploadInChunks } from "@/lib/upload-client";
 import { statusLabels, type AdminOrderState, type OrderStatus } from "@/lib/types";
+import type { EstimateLine } from "@/lib/estimate";
 import { Chat } from "./Chat";
+import { PriceEstimator } from "./PriceEstimator";
 import { usePolling } from "./usePolling";
 
 export function AdminOrder({ id, initial }: { id: string; initial: AdminOrderState }) {
@@ -14,6 +16,9 @@ export function AdminOrder({ id, initial }: { id: string; initial: AdminOrderSta
 
   const [amount, setAmount] = useState(order.quote_amount ? String(order.quote_amount / 100) : "");
   const [note, setNote] = useState(order.quote_note ?? "");
+  const [breakdown, setBreakdown] = useState<EstimateLine[] | null>(null);
+  const [showBreakdown, setShowBreakdown] = useState(true);
+  const [estimating, setEstimating] = useState(false);
   const [status, setStatus] = useState<OrderStatus>(order.status);
   const [notice, setNotice] = useState("");
   const [busy, setBusy] = useState(false);
@@ -70,7 +75,7 @@ export function AdminOrder({ id, initial }: { id: string; initial: AdminOrderSta
       return;
     }
     setBusy(true);
-    const err = await act({ action: "quote", amount: value, note });
+    const err = await act({ action: "quote", amount: value, note, breakdown: showBreakdown && breakdown ? breakdown : undefined });
     setNotice(err ?? "Price sent. The client can now pay from their page.");
     setBusy(false);
   }
@@ -175,6 +180,18 @@ export function AdminOrder({ id, initial }: { id: string; initial: AdminOrderSta
               ) : (
                 <p className="muted">The client can only pay after you send a price here.</p>
               )}
+              <button type="button" className="link-inline estimator__toggle" aria-expanded={estimating} onClick={() => setEstimating((e) => !e)}>
+                {estimating ? "Hide the estimator" : "Work it out with the estimator"}
+              </button>
+              {estimating ? (
+                <PriceEstimator
+                  onUse={(lines, total) => {
+                    setBreakdown(lines);
+                    setAmount(String(total / 100));
+                    setEstimating(false);
+                  }}
+                />
+              ) : null}
               <div className="field">
                 <label className="label" htmlFor="amount">
                   Amount (EUR)
@@ -201,6 +218,12 @@ export function AdminOrder({ id, initial }: { id: string; initial: AdminOrderSta
                   placeholder="One 20 s vertical film, two revisions"
                 />
               </div>
+              {breakdown ? (
+                <label className="check">
+                  <input type="checkbox" checked={showBreakdown} onChange={(e) => setShowBreakdown(e.target.checked)} />
+                  <span>Show the client how this price was worked out ({breakdown.length} lines; a changed amount shows as an adjustment)</span>
+                </label>
+              ) : null}
               <div>
                 <button className="btn btn--primary" type="submit" disabled={busy || !amount}>
                   Send price to client

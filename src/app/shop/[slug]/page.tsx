@@ -2,8 +2,9 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { BuyBox } from "@/components/BuyBox";
+import { ProductGallery } from "@/components/ProductGallery";
 import { formatMoney, formatSize } from "@/lib/format";
-import { findOwnPurchase, getProduct, getProductFiles, thumbUrl } from "@/lib/shop";
+import { findOwnPurchase, galleryUrls, getProduct, getProductFiles, thumbUrl } from "@/lib/shop";
 
 export const dynamic = "force-dynamic";
 
@@ -26,7 +27,6 @@ export default async function ProductPage({ params }: Props) {
   const product = await getProduct({ slug });
   if (!product?.published) notFound();
   const [files, owned] = await Promise.all([getProductFiles(product.id, { completeOnly: true }), findOwnPurchase(product.id)]);
-  const thumb = thumbUrl(product);
   const total = files.reduce((n, f) => n + f.size, 0);
 
   return (
@@ -39,7 +39,9 @@ export default async function ProductPage({ params }: Props) {
         </p>
       </div>
       <div className="product__grid">
-        <div className="product__media">{thumb ? <img src={thumb} alt="" /> : null}</div>
+        <div className="product__media">
+          <ProductGallery images={galleryUrls(product)} title={product.title} />
+        </div>
         <div className="product__info">
           <h1 className="display product__title">{product.title}</h1>
           {product.summary ? <p className="lede">{product.summary}</p> : null}

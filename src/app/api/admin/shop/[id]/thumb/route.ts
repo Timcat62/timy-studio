@@ -1,3 +1,4 @@
+import { revalidatePath } from "next/cache";
 import sharp from "sharp";
 import { isAdmin } from "@/lib/admin-auth";
 import { removeStored, writeWhole } from "@/lib/disk";
@@ -35,5 +36,6 @@ export async function POST(req: Request, { params }: Ctx) {
   await writeWhole("shop", path, image);
   await db().from("products").update({ thumb_path: path, updated_at: new Date().toISOString() }).eq("id", id);
   if (product.thumb_path) await removeStored("shop", product.thumb_path);
+  revalidatePath("/shop");
   return Response.json({ ok: true });
 }

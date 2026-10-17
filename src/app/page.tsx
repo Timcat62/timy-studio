@@ -96,18 +96,16 @@ export default async function Home() {
         </div>
       </section>
 
-      {/* 2. A video that grows to fill the screen */}
-      <section className="pin pin--expand" data-scroll="pin">
-        <div className="pin__stage expand__stage">
-          <p className="expand__lead">Made in Blender.</p>
-          <div className="expand__frame">
-            <LazyVideo name="nurburgring" />
-            <div className="expand__shade" aria-hidden="true" />
+      {/* 2. A wide screen that tilts up into place, the film drifting inside it as you scroll */}
+      <section className="cinema" data-scroll="view">
+        <div className="wrap">
+          <div className="cinema__head">
+            <p className="cinema__lead">Made in Blender.</p>
+            <h2 className="display">Every frame, made by me.</h2>
           </div>
-          <div className="expand__caption">
-            <div className="wrap">
-              <h2 className="display">Every frame, made by me.</h2>
-            </div>
+          <div className="cinema__frame">
+            <LazyVideo name="nurburgring" className="cinema__video" />
+            <span className="cinema__tag">Nürburgring · Ad</span>
           </div>
         </div>
       </section>

@@ -39,6 +39,8 @@ export function ProductEditor({ product, files, thumb }: Props) {
   const router = useRouter();
   const coverPicker = useRef<HTMLInputElement>(null);
   const filePicker = useRef<HTMLInputElement>(null);
+  const galleryPicker = useRef<HTMLInputElement>(null);
+  const version = Date.parse(product.updated_at) || 0;
 
   const [title, setTitle] = useState(product.title);
   const [slug, setSlug] = useState(product.slug.startsWith("draft-") ? "" : product.slug);
@@ -91,6 +93,41 @@ export function ProductEditor({ product, files, thumb }: Props) {
     if (!res.ok) setError(data.error ?? "Could not upload the cover.");
     router.refresh();
   }
+
+  async function addImages(list: FileList | null) {
+    if (!list?.length) return;
+    setBusy("gallery");
+    setError("");
+    for (const file of Array.from(list)) {
+      const body = new FormData();
+      body.append("file", file);
+      const res = await fetch(`/api/admin/shop/${product.id}/images`, { method: "POST", body });
+      if (!res.ok) {
+        const data = (await res.json().catch(() => ({}))) as { error?: string };
+        setError(`${file.name}: ${data.error ?? "could not upload."}`);
+        break;
+      }
+    }
+    setBusy("");
+    router.refresh();
+  }
+
+  async function setImages(images: string[]) {
+    setBusy("gallery");
+    await fetch(`/api/admin/shop/${product.id}/images`, {
+      method: "PUT",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ images }),
+    });
+    setBusy("");
+    router.refresh();
+  }
+
+  const moveImage = (i: number, by: number) => {
+    const next = [...product.images];
+    [next[i], next[i + by]] = [next[i + by], next[i]];
+    void setImages(next);
+  };
 
   async function addFiles(list: FileList | null) {
     if (!list?.length) return;
@@ -223,6 +260,59 @@ export function ProductEditor({ product, files, thumb }: Props) {
               const f = e.target.files?.[0];
               e.target.value = "";
               if (f) void setCover(f);
+            }}
+          />
+        </section>
+
+        <section className="panel">
+          <h2>More images</h2>
+          {product.images.length === 0 ? (
+            <p className="muted">Buyers flip through these after the cover, with arrows.</p>
+          ) : (
+            <ul className="editor__gallery">
+              {product.images.map((path, i) => (
+                <li key={path}>
+                  <img src={`/api/shop/thumb/${product.id}?img=${i}&v=${version}`} alt="" />
+                  <div className="editor__gallery-tools">
+                    <button type="button" className="icon-btn" aria-label="Move left" disabled={i === 0 || busy !== ""} onClick={() => moveImage(i, -1)}>
+                      ‹
+                    </button>
+                    <button
+                      type="button"
+                      className="icon-btn"
+                      aria-label="Move right"
+                      disabled={i === product.images.length - 1 || busy !== ""}
+                      onClick={() => moveImage(i, 1)}
+                    >
+                      ›
+                    </button>
+                    <button
+                      type="button"
+                      className="icon-btn"
+                      aria-label="Remove this image"
+                      disabled={busy !== ""}
+                      onClick={() => window.confirm("Remove this image?") && void setImages(product.images.filter((p) => p !== path))}
+                    >
+                      <Icon name="close" />
+                    </button>
+                  </div>
+                </li>
+              ))}
+            </ul>
+          )}
+          <button className="btn btn--ghost btn--small" onClick={() => galleryPicker.current?.click()} disabled={busy !== ""}>
+            {busy === "gallery" ? "Uploading…" : "Add images"}
+          </button>
+          <p className="hint">Any ratio, shown whole. JPG, PNG or WebP up to 15 MB, 12 at most.</p>
+          <input
+            ref={galleryPicker}
+            type="file"
+            accept="image/jpeg,image/png,image/webp"
+            multiple
+            hidden
+            onChange={(e) => {
+              void addImages(e.target.files);
+              e.target.value = "";
             }}
           />
         </section>

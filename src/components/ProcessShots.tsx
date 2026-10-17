@@ -3,25 +3,37 @@
 import { useEffect, useRef, useState } from "react";
 
 /**
- * Screenshots of the project page next to "How working with me works". The one shown follows the step
- * being read: it reads the --p progress that ScrollEffects writes on the .process list next to it.
+ * Screenshots of the project page next to "How working with me works". The phone stays in the middle of the
+ * screen, and shows the step being read: the last one whose top has passed the middle of the screen.
  */
 export function ProcessShots({ shots }: { shots: { src: string; alt: string }[] }) {
   const root = useRef<HTMLDivElement>(null);
   const [active, setActive] = useState(0);
 
   useEffect(() => {
-    const list = root.current?.parentElement?.querySelector<HTMLElement>(".process");
-    if (!list) return;
+    const items = Array.from(root.current?.parentElement?.querySelectorAll<HTMLElement>(".process__list > li") ?? []);
+    if (!items.length) return;
+    let frame = 0;
     const read = () => {
-      const p = parseFloat(list.style.getPropertyValue("--p") || "0");
-      // same pace as the steps' fade-in in CSS: step i is fully lit once p * 4.6 passes i + 0.78
-      setActive(Math.max(0, Math.min(shots.length - 1, Math.floor(p * 4.6 - 0.78))));
+      frame = 0;
+      const line = window.innerHeight * 0.55;
+      let i = 0;
+      items.forEach((el, j) => {
+        if (el.getBoundingClientRect().top < line) i = j;
+      });
+      setActive(Math.min(shots.length - 1, i));
+    };
+    const request = () => {
+      if (!frame) frame = requestAnimationFrame(read);
     };
     read();
-    const mo = new MutationObserver(read);
-    mo.observe(list, { attributes: true, attributeFilter: ["style"] });
-    return () => mo.disconnect();
+    window.addEventListener("scroll", request, { passive: true });
+    window.addEventListener("resize", request);
+    return () => {
+      cancelAnimationFrame(frame);
+      window.removeEventListener("scroll", request);
+      window.removeEventListener("resize", request);
+    };
   }, [shots.length]);
 
   return (

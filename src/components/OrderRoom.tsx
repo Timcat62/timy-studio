@@ -142,6 +142,23 @@ export function OrderRoom({ token, initial, justPaid, signedIn }: Props) {
               <h2 id="pay-title">Final price</h2>
               <p className="price">{formatMoney(order.quote_amount, order.quote_currency)}</p>
               {order.quote_note ? <p className="muted" style={{ marginTop: "0.5rem" }}>{order.quote_note}</p> : null}
+              {order.quote_breakdown?.length ? (
+                <details className="breakdown-box">
+                  <summary>How this price is worked out</summary>
+                  <ul className="breakdown">
+                    {order.quote_breakdown.map((l, i) => (
+                      <li key={i}>
+                        <span>{l.label}</span>
+                        <span className="num">{formatMoney(l.amount, order.quote_currency)}</span>
+                      </li>
+                    ))}
+                    <li className="breakdown__total">
+                      <span>Total</span>
+                      <span className="num">{formatMoney(order.quote_amount, order.quote_currency)}</span>
+                    </li>
+                  </ul>
+                </details>
+              ) : null}
               <label className="check" style={{ marginTop: "1.25rem" }}>
                 <input type="checkbox" checked={accept} onChange={(e) => setAccept(e.target.checked)} />
                 <span>

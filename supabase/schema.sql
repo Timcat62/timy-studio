@@ -78,3 +78,4 @@ values ('avatars', 'avatars', true, 1048576, array['image/webp'])
 on conflict (id) do nothing;
 
 -- Shop and files on the server's disk: see 2026-10-shop-and-disk.sql (run it once).
+-- Gallery images and price breakdown: see 2026-10-gallery-and-estimate.sql

@@ -3,7 +3,8 @@ import Link from "next/link";
 import { formatMoney } from "@/lib/format";
 import { listProducts, thumbUrl } from "@/lib/shop";
 
-export const dynamic = "force-dynamic";
+// the grid is the same for everyone: built once, refreshed when I edit a product or after a minute at most
+export const revalidate = 60;
 export const metadata: Metadata = {
   title: "Shop",
   description: "Blender project files, car models and more, ready to download.",

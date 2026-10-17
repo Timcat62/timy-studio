@@ -1,5 +1,6 @@
 const icons = {
   arrow: <path d="M5 12h14M13 6l6 6-6 6" />,
+  chevron: <path d="m9 5 7 7-7 7" />,
   external: <path d="M14 5h5v5M19 5l-8 8M18 14v4a1 1 0 0 1-1 1H6a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1h4" />,
   mail: (
     <>

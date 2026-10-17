@@ -19,7 +19,8 @@ export async function proxy(request: NextRequest) {
       },
     },
   });
-  await supabase.auth.getUser();
+  // checks the session token locally and only calls Supabase when it has to be renewed, so pages don't wait on it
+  await supabase.auth.getClaims();
   return response;
 }
 

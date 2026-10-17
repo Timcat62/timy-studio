@@ -4,6 +4,20 @@
  */
 export const updates: { version: string; date: string; title: string; changes: string[] }[] = [
   {
+    version: "1.6",
+    date: "2026-10-17",
+    title: "Faster pages, product previews, clear prices",
+    changes: [
+      "A thin bar at the top shows when a page is on its way, and the shop opens faster.",
+      "Shop products have several preview images to flip through with arrows or a swipe.",
+      "Each product in the shop sits in its own glass card.",
+      "Final prices come with the detail of how they are worked out, line by line.",
+      "The screenshots next to “How working with me works” stay in the middle of the screen while you read each step.",
+      "A new way to watch the Nürburgring film, and a calmer font for prices.",
+      "Rounded tab icon, and the Start button sits evenly in the menu bar.",
+    ],
+  },
+  {
     version: "1.5",
     date: "2026-10-17",
     title: "Shop, files in the chat",

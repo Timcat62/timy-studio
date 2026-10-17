@@ -40,6 +40,7 @@ export interface PublicOrder {
   quote_amount: number | null;
   quote_currency: string;
   quote_note: string | null;
+  quote_breakdown: { label: string; amount: number }[] | null;
   paid_at: string | null;
   created_at: string;
 }

@@ -30,6 +30,11 @@ const actionSchema = z.discriminatedUnion("action", [
     action: z.literal("quote"),
     amount: z.number().min(1).max(100000),
     note: z.string().trim().max(500).optional().default(""),
+    // lines from the price estimator, in cents; shown to the client under the price
+    breakdown: z
+      .array(z.object({ label: z.string().trim().min(1).max(80), amount: z.number().int().min(-10_000_000).max(10_000_000) }))
+      .max(15)
+      .optional(),
   }),
   z.object({ action: z.literal("status"), status: z.enum(statuses) }),
 ]);
@@ -76,11 +81,18 @@ export async function POST(req: Request, { params }: Ctx) {
       return NextResponse.json({ error: "This order is already paid." }, { status: 400 });
     }
     const cents = Math.round(input.amount * 100);
+    // if the amount was changed after the estimate, the gap shows as its own line so the lines always add up
+    let breakdown = input.breakdown?.length ? input.breakdown : null;
+    if (breakdown) {
+      const gap = cents - breakdown.reduce((n, l) => n + l.amount, 0);
+      if (gap !== 0) breakdown = [...breakdown, { label: gap > 0 ? "Adjustment" : "Discount", amount: gap }];
+    }
     await db()
       .from("orders")
       .update({
         quote_amount: cents,
         quote_note: input.note || null,
+        quote_breakdown: breakdown,
         quoted_at: new Date().toISOString(),
         status: "quoted",
       })
