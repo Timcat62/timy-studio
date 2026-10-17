@@ -171,7 +171,9 @@ export function BriefForm({ maxFiles, maxFileSizeMB, defaultType, account }: Pro
           </label>
           <select className="select" id="projectType" name="projectType" required defaultValue={defaultType ?? projectTypes[0]}>
             {projectTypes.map((t) => (
-              <option key={t}>{t}</option>
+              <option key={t} value={t}>
+                {t}
+              </option>
             ))}
           </select>
         </div>
@@ -181,7 +183,9 @@ export function BriefForm({ maxFiles, maxFileSizeMB, defaultType, account }: Pro
           </label>
           <select className="select" id="budget" name="budget" required defaultValue={budgets[budgets.length - 1]}>
             {budgets.map((b) => (
-              <option key={b}>{b}</option>
+              <option key={b} value={b}>
+                {b}
+              </option>
             ))}
           </select>
         </div>

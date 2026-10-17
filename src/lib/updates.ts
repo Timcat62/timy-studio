@@ -4,6 +4,12 @@
  */
 export const updates: { version: string; date: string; title: string; changes: string[] }[] = [
   {
+    version: "1.6.1",
+    date: "2026-10-17",
+    title: "Brief form fix on phones",
+    changes: ["Briefs sent from a phone with automatic page translation turned on no longer get stuck on the project type."],
+  },
+  {
     version: "1.6",
     date: "2026-10-17",
     title: "Faster pages, product previews, clear prices",
