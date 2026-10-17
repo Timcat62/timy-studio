@@ -7,7 +7,16 @@ export function Footer() {
     <footer className="site-footer">
       <div className="wrap">
         <div className="site-footer__grid">
-          <p className="site-footer__tag">3D car animation, made by me in Blender.</p>
+          <div className="site-footer__intro">
+            <p className="site-footer__tag">3D car animation, made by me in Blender.</p>
+            <p className="site-footer__contact">
+              For anything else, write to me at{" "}
+              <a href={`mailto:${site.email}`} className="link-inline">
+                {site.email}
+              </a>
+              .
+            </p>
+          </div>
           <div>
             <h3>Menu</h3>
             <ul>
@@ -24,6 +33,9 @@ export function Footer() {
                 <Link href="/account">Your account</Link>
               </li>
               <li>
+                <Link href="/updates">Updates</Link>
+              </li>
+              <li>
                 <Link href="/about">About and music</Link>
               </li>
               <li>
@@ -37,7 +49,9 @@ export function Footer() {
           </div>
         </div>
         <div className="site-footer__small">
-          <span>© {new Date().getFullYear()} {site.name} All rights reserved.</span>
+          <span>
+            © {new Date().getFullYear()} {site.name} All rights reserved.
+          </span>
           <Link href="/legal">Legal and terms</Link>
         </div>
       </div>

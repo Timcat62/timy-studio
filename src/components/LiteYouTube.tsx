@@ -8,15 +8,17 @@ interface Props {
   title: string;
   url: string;
   index: number;
+  /** A cover saved on this site; without it, YouTube's own thumbnail is used. */
+  poster?: string;
 }
 
 /**
  * Click-to-play YouTube embed. Until a visitor presses play, only a thumbnail is loaded: no YouTube script,
  * no cookies. The player uses the privacy-enhanced domain (youtube-nocookie.com).
  */
-export function LiteYouTube({ id, title, url, index }: Props) {
+export function LiteYouTube({ id, title, url, index, poster }: Props) {
   const [playing, setPlaying] = useState(false);
-  const [thumb, setThumb] = useState(`https://i.ytimg.com/vi/${id}/maxresdefault.jpg`);
+  const [thumb, setThumb] = useState(poster ?? `https://i.ytimg.com/vi/${id}/maxresdefault.jpg`);
   const fallback = `https://i.ytimg.com/vi/${id}/hqdefault.jpg`;
 
   return (

@@ -5,7 +5,8 @@ import { LazyVideo } from "./LazyVideo";
 
 export type BackdropItem =
   | { kind: "video"; name: string; position?: string }
-  | { kind: "image"; name: string; widths: number[]; position?: string; alt: string };
+  | { kind: "image"; name: string; widths: number[]; position?: string; alt: string }
+  | { kind: "collage"; name: string; images: string[] };
 
 /** Full-bleed backgrounds that cross-fade as the chapter changes (the section's data-step is set by ScrollEffects). */
 export function ChapterBackdrop({ items }: { items: BackdropItem[] }) {
@@ -28,6 +29,12 @@ export function ChapterBackdrop({ items }: { items: BackdropItem[] }) {
         <div key={item.name + i} className="backdrop__layer" data-on={i === step}>
           {item.kind === "video" ? (
             <LazyVideo name={item.name} active={i === step} position={item.position} />
+          ) : item.kind === "collage" ? (
+            <div className="backdrop__collage" aria-hidden="true">
+              {item.images.map((src) => (
+                <img key={src} src={src} alt="" loading="lazy" decoding="async" />
+              ))}
+            </div>
           ) : (
             <img
               src={`/images/${item.name}-${item.widths[Math.min(1, item.widths.length - 1)]}.jpg`}

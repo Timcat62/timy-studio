@@ -23,20 +23,14 @@ export function Header() {
           {site.name}
         </Link>
         <nav className="nav" aria-label="Main">
-          <Link href="/#work" className="nav__optional">
-            Work
-          </Link>
           <Link href="/#services" className="nav__optional">
             Services
           </Link>
-          <Link href="/portfolio" className="nav__optional" aria-current={pathname === "/portfolio" ? "page" : undefined}>
+          <Link href="/portfolio" aria-current={pathname === "/portfolio" ? "page" : undefined}>
             Portfolio
           </Link>
           <Link href="/about" className="nav__narrow-hide" aria-current={pathname === "/about" ? "page" : undefined}>
             About
-          </Link>
-          <Link href="/account" aria-current={pathname.startsWith("/account") || pathname === "/login" ? "page" : undefined}>
-            Account
           </Link>
           <Link href="/start" className="btn btn--primary btn--small">
             Start a project

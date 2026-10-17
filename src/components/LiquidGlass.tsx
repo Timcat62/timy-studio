@@ -146,7 +146,7 @@ export function LiquidGlass() {
         const known = filters.get(key);
         if (known) return known;
         const id = `lg${counter++}`;
-        const bezel = Math.max(6, Math.min(r, h / 2) * 0.62);
+        const bezel = Math.max(5, Math.min(r, h / 2) * 0.45); // a thin lens edge reads as a bubble
         const url = displacementMap(w, h, r, bezel);
         const f = document.createElementNS(NS, "filter");
         f.setAttribute("id", id);

@@ -32,24 +32,20 @@ const backdrops: BackdropItem[] = [
     alt: "A grainy black and white head-on view of a car at night",
   }, // Spotify Canvas
   {
-    kind: "image",
-    name: "audi",
-    widths: [1280, 1920, 2560],
-    alt: "A silver estate car seen head-on at night, headlights lit",
-  }, // And more
+    kind: "collage",
+    name: "stills",
+    images: ["D4EDyZtzYHM", "duW_oiJKw44", "bmJBvJkbVNI", "yTcQb0xd8w0", "lRLQeJtkSxA"].map((id) => `/portfolio/${id}.jpg`),
+  }, // And more: stills from my videos, side by side
 ];
 
 const statement = [
   { w: "Cars" },
   { w: "in" },
-  { w: "impossible", gold: true },
+  { w: "unexpected", gold: true },
   { w: "places.", gold: true },
-  { w: "Made" },
-  { w: "frame" },
-  { w: "by" },
-  { w: "frame" },
+  { w: "Animated" },
   { w: "in" },
-  { w: "Blender," },
+  { w: "Blender" },
   { w: "for" },
   { w: "brands," },
   { w: "creators" },
@@ -204,20 +200,28 @@ export default async function Home() {
       </section>
 
       {/* 6. How a project works */}
-      <section className="section">
+      <section className="section section--clip">
         <div className="wrap">
           <h2 className="h2">How working with me works</h2>
           <p className="lede">You are never asked to pay before we have agreed on a price together.</p>
-          <div className="process" data-scroll="view">
-            <span className="process__line" aria-hidden="true" />
-            <ol className="process__list">
-              {steps.map((s, i) => (
-                <li key={s.title} style={{ "--i": i } as Vars}>
-                  <h3>{s.title}</h3>
-                  <p>{s.text}</p>
-                </li>
+          <div className="process-wrap">
+            <div className="process" data-scroll="view">
+              <span className="process__line" aria-hidden="true" />
+              <ol className="process__list">
+                {steps.map((s, i) => (
+                  <li key={s.title} style={{ "--i": i } as Vars}>
+                    <h3>{s.title}</h3>
+                    <p>{s.text}</p>
+                  </li>
+                ))}
+              </ol>
+            </div>
+            {/* stills from my videos, fanned out next to the steps on wide screens */}
+            <div className="stills-fan" aria-hidden="true">
+              {["HfSrwJAI-kc", "EsL0pJllq9o", "znob-P5k22Q"].map((id) => (
+                <img key={id} src={`/portfolio/${id}.jpg`} alt="" loading="lazy" decoding="async" width={540} height={960} />
               ))}
-            </ol>
+            </div>
           </div>
         </div>
       </section>
