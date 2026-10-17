@@ -76,3 +76,5 @@ create index if not exists orders_email_idx on orders(lower(email));
 insert into storage.buckets (id, name, public, file_size_limit, allowed_mime_types)
 values ('avatars', 'avatars', true, 1048576, array['image/webp'])
 on conflict (id) do nothing;
+
+-- Shop and files on the server's disk: see 2026-10-shop-and-disk.sql (run it once).

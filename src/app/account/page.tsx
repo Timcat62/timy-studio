@@ -33,6 +33,13 @@ export default async function Account() {
     .order("created_at", { ascending: false })
     .limit(100);
   const rows = (data as Row[] | null) ?? [];
+  const { data: bought } = await db()
+    .from("purchases")
+    .select("token,created_at,products(title)")
+    .eq("user_id", user.id)
+    .order("created_at", { ascending: false })
+    .limit(100);
+  const purchases = (bought ?? []) as unknown as { token: string; created_at: string; products: { title: string } | null }[];
   const profile = profileOf(user);
   const usesPassword = user.app_metadata?.providers?.includes("email") ?? user.app_metadata?.provider === "email";
 
@@ -100,6 +107,25 @@ export default async function Account() {
               </table>
             </div>
           )}
+          {purchases.length > 0 ? (
+            <>
+              <h2 className="h2 account-grid__title" style={{ marginTop: "2.5rem" }}>
+                Your downloads
+              </h2>
+              <ul className="download-list">
+                {purchases.map((p) => (
+                  <li key={p.token}>
+                    <Link className="download-item" href={`/shop/download/${p.token}`}>
+                      <span className="download-item__name">{p.products?.title ?? "Removed product"}</span>
+                      <span className="muted num" suppressHydrationWarning>
+                        {formatDate(p.created_at)}
+                      </span>
+                    </Link>
+                  </li>
+                ))}
+              </ul>
+            </>
+          ) : null}
         </div>
         <ProfileForm profile={profile} />
       </div>

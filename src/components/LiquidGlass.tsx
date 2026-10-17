@@ -3,7 +3,7 @@
 import { useEffect } from "react";
 
 /** Everything that is drawn as liquid glass. */
-const SELECTOR = ".btn, .social, .site-header__row, .chapters__dots, .yt__icon, .work-card__play";
+const SELECTOR = ".btn, .social, .site-header__row, .chapters__dots, .yt__icon, .work-card__play, .phone-menu";
 /** Glass that reacts to touch and pointer like a physical button (it grows, follows the finger, springs back). */
 const TACTILE = ".btn, .social";
 
@@ -57,7 +57,11 @@ function displacementMap(w: number, h: number, r: number, bezel: number) {
       }
       const depth = -dist;
       const t = depth >= bezel ? 1 : Math.max(0, depth) / bezel;
-      const m = Math.pow(1 - t, 2.2); // strongest right at the edge, gone toward the centre
+      // The edge is a rounded bulge (a quarter circle in profile). Light bends with the slope of the surface,
+      // which is steepest at the rim: the backdrop is stretched hard right at the edge and barely moves further in,
+      // like the rim of a real glass lens.
+      const slope = (1 - t) / Math.sqrt(Math.max(1e-4, 1 - (1 - t) * (1 - t)));
+      const m = Math.min(1, slope / 3);
       const i = (y * w + x) * 4;
       px[i] = 128 + -nx * m * 127;
       px[i + 1] = 128 + -ny * m * 127;
@@ -146,7 +150,7 @@ export function LiquidGlass() {
         const known = filters.get(key);
         if (known) return known;
         const id = `lg${counter++}`;
-        const bezel = Math.max(5, Math.min(r, h / 2) * 0.45); // a thin lens edge reads as a bubble
+        const bezel = Math.max(6, Math.min(r, h / 2) * 0.7); // how far in from the edge the glass is curved
         const url = displacementMap(w, h, r, bezel);
         const f = document.createElementNS(NS, "filter");
         f.setAttribute("id", id);
@@ -167,7 +171,7 @@ export function LiquidGlass() {
         f.appendChild(img);
         // Chromatic dispersion: each colour channel is bent by a slightly different amount, like light through a
         // real lens. The map is neutral in the centre, so the colour fringes only show up along the edge.
-        const scale = bezel * 2.4;
+        const scale = bezel * 3;
         const channels = [
           { name: "r", k: 1 + DISPERSION, matrix: "1 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 1 0" },
           { name: "g", k: 1, matrix: "0 0 0 0 0  0 1 0 0 0  0 0 0 0 0  0 0 0 1 0" },

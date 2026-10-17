@@ -19,7 +19,7 @@ export function Footer() {
           </div>
           <div>
             <h3>Menu</h3>
-            <ul>
+            <ul className="site-footer__menu">
               <li>
                 <Link href="/#work">Work</Link>
               </li>
@@ -28,6 +28,9 @@ export function Footer() {
               </li>
               <li>
                 <Link href="/portfolio">Portfolio</Link>
+              </li>
+              <li>
+                <Link href="/shop">Shop</Link>
               </li>
               <li>
                 <Link href="/account">Your account</Link>

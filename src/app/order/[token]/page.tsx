@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import { notFound, redirect } from "next/navigation";
 import { OrderRoom } from "@/components/OrderRoom";
 import { currentUser } from "@/lib/auth";
-import { getAttachments, getMessages, getOrderForViewer } from "@/lib/orders";
+import { getOrderForViewer, loadClientState } from "@/lib/orders";
 
 export const dynamic = "force-dynamic";
 export const metadata: Metadata = {
@@ -24,15 +24,11 @@ export default async function OrderPage({
   if (access.status !== "ok") notFound();
   const { order } = access;
 
-  const [messages, attachments, user] = await Promise.all([
-    getMessages(order.id),
-    getAttachments(order.id),
-    currentUser(),
-  ]);
+  const [state, user] = await Promise.all([loadClientState(order, token), currentUser()]);
   return (
     <OrderRoom
       token={token}
-      initial={{ order, messages, attachments }}
+      initial={state}
       justPaid={paid === "1"}
       signedIn={Boolean(user)}
     />

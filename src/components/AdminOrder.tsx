@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { useCallback, useState } from "react";
 import { formatDate, formatMoney, formatSize } from "@/lib/format";
+import { uploadInChunks } from "@/lib/upload-client";
 import { statusLabels, type AdminOrderState, type OrderStatus } from "@/lib/types";
 import { Chat } from "./Chat";
 import { usePolling } from "./usePolling";
@@ -51,6 +52,16 @@ export function AdminOrder({ id, initial }: { id: string; initial: AdminOrderSta
     return null;
   }
 
+  async function attach(file: File, onProgress: (f: number) => void) {
+    try {
+      await uploadInChunks(file, { url: `/api/admin/orders/${id}/files` }, (fileId) => `/api/upload/admin-order/${id}/${fileId}`, onProgress);
+      await refresh();
+      return null;
+    } catch (err) {
+      return err instanceof Error ? err.message : "Could not send the file.";
+    }
+  }
+
   async function sendQuote(e: React.FormEvent) {
     e.preventDefault();
     const value = Number(amount.replace(",", "."));
@@ -76,7 +87,13 @@ export function AdminOrder({ id, initial }: { id: string; initial: AdminOrderSta
   return (
     <div className="room">
       <div className="stack">
-        <Chat messages={messages} me="admin" onSend={(body) => act({ action: "message", body })} placeholder="Reply to the client" />
+        <Chat
+          messages={messages}
+          me="admin"
+          onSend={(body) => act({ action: "message", body })}
+          onAttach={attach}
+          placeholder="Reply to the client"
+        />
       </div>
 
       <aside className="room__side">
@@ -129,7 +146,8 @@ export function AdminOrder({ id, initial }: { id: string; initial: AdminOrderSta
               {attachments.map((a) => (
                 <li key={a.id}>
                   {a.url ? (
-                    <a href={a.url} download={a.filename}>
+                    <a href={a.url}>
+                      {a.sender === "admin" ? "Sent by me: " : ""}
                       {a.filename}
                     </a>
                   ) : (

@@ -4,6 +4,7 @@ import { Faq } from "@/components/Faq";
 import { Icon } from "@/components/Icon";
 import { LazyVideo } from "@/components/LazyVideo";
 import { LiteYouTube } from "@/components/LiteYouTube";
+import { ProcessShots } from "@/components/ProcessShots";
 import { ScrollEffects } from "@/components/ScrollEffects";
 import { Strip } from "@/components/Strip";
 import { faq, links, services, site, steps } from "@/lib/config";
@@ -11,6 +12,7 @@ import { getWorks } from "@/lib/works";
 
 const youtube = links.find((l) => l.label === "YouTube")?.href ?? "";
 const tiktok = links.find((l) => l.label === "TikTok")?.href ?? `https://www.tiktok.com/@${site.handle}`;
+const instagram = links.find((l) => l.label === "Instagram")?.href ?? `https://www.instagram.com/${site.handle}`;
 
 const srcSet = (name: string, widths: number[]) => widths.map((w) => `/images/${name}-${w}.jpg ${w}w`).join(", ");
 
@@ -36,6 +38,14 @@ const backdrops: BackdropItem[] = [
     name: "stills",
     images: ["D4EDyZtzYHM", "duW_oiJKw44", "bmJBvJkbVNI", "yTcQb0xd8w0", "lRLQeJtkSxA"].map((id) => `/portfolio/${id}.jpg`),
   }, // And more: stills from my videos, side by side
+];
+
+/** Screenshots of the project page, one per step of "How working with me works". */
+const processShots = [
+  { src: "/images/process/step-1.jpg", alt: "The brief form, filled in" },
+  { src: "/images/process/step-2.jpg", alt: "The project chat, with a file sent by the client" },
+  { src: "/images/process/step-3.jpg", alt: "The final price, ready to accept and pay" },
+  { src: "/images/process/step-4.jpg", alt: "The finished file delivered in the chat" },
 ];
 
 const statement = [
@@ -124,7 +134,6 @@ export default async function Home() {
             <ol className="chapters__list">
               {services.map((s, i) => (
                 <li key={s.name} className="chapter" data-i={i}>
-                  <span className="chapter__num">{String(i + 1).padStart(2, "0")}</span>
                   <h2 className="display">{s.name}</h2>
                   <p>{s.text}</p>
                   <small>{s.delivery}</small>
@@ -184,7 +193,10 @@ export default async function Home() {
                   </a>
                 ) : null}
                 <a className="link-arrow" href={tiktok} target="_blank" rel="noopener noreferrer" style={{ marginLeft: "1.5rem" }}>
-                  and TikTok <Icon name="arrow-up-right" />
+                  TikTok <Icon name="arrow-up-right" />
+                </a>
+                <a className="link-arrow" href={instagram} target="_blank" rel="noopener noreferrer" style={{ marginLeft: "1.5rem" }}>
+                  and Instagram <Icon name="arrow-up-right" />
                 </a>
               </p>
             </>
@@ -212,16 +224,15 @@ export default async function Home() {
                   <li key={s.title} style={{ "--i": i } as Vars}>
                     <h3>{s.title}</h3>
                     <p>{s.text}</p>
+                    {processShots[i] ? (
+                      <img className="process__shot" src={processShots[i].src} alt="" loading="lazy" decoding="async" width={600} height={1140} />
+                    ) : null}
                   </li>
                 ))}
               </ol>
             </div>
-            {/* stills from my videos, fanned out next to the steps on wide screens */}
-            <div className="stills-fan" aria-hidden="true">
-              {["HfSrwJAI-kc", "EsL0pJllq9o", "znob-P5k22Q"].map((id) => (
-                <img key={id} src={`/portfolio/${id}.jpg`} alt="" loading="lazy" decoding="async" width={540} height={960} />
-              ))}
-            </div>
+            {/* on wide screens, a screenshot of each step follows the scroll */}
+            <ProcessShots shots={processShots} />
           </div>
         </div>
       </section>

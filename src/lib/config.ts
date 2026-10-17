@@ -133,7 +133,7 @@ export const faq = [
   },
   {
     q: "What can I send you?",
-    a: "Reference images, logos, brand guidelines, audio, and 3D models of the car if you have them: up to 5 files of 50 MB each on the form. For anything larger, share a link. No model? Tell me the car and we'll see what's possible.",
+    a: "Reference images, logos, brand guidelines, audio, and 3D models of the car if you have them: up to 10 files of 4 GB each on the form, and more later in the project chat. No model? Tell me the car and we'll see what's possible.",
   },
   {
     q: "How do we talk during the project?",
@@ -164,8 +164,8 @@ export const budgets = [
   "Not sure yet",
 ];
 
-export const maxFiles = 5;
-export const maxFileSizeMB = 50; // Supabase free plan allows 50 MB per file
+export const maxFiles = 10;
+export const maxFileSizeMB = 4096; // files are stored on the server's own disk, sent in 8 MB chunks
 
 /** Apple Music artist IDs whose releases are shown on the About page (find the ID at the end of the artist URL). */
 export const appleArtistIds = ["1882198272"]; // add the IDs of your other artist names here

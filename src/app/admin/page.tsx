@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { AdminLogin } from "@/components/AdminLogin";
-import { LogoutButton } from "@/components/LogoutButton";
+import { AdminNav } from "@/components/AdminNav";
 import { isAdmin } from "@/lib/admin-auth";
 import { formatDate, formatMoney } from "@/lib/format";
 import { db } from "@/lib/supabase";
@@ -44,12 +44,7 @@ export default async function Admin() {
 
   return (
     <div className="wrap" style={{ paddingBottom: "6rem" }}>
-      <div className="page-head admin-bar">
-        <h1 className="display" style={{ fontSize: "clamp(1.75rem, 4vw, 2.5rem)" }}>
-          Orders
-        </h1>
-        <LogoutButton />
-      </div>
+      <AdminNav current="orders" />
       {rows.length === 0 ? (
         <p className="notice">No briefs yet. They'll show up here as soon as someone sends one.</p>
       ) : (

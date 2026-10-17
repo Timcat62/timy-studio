@@ -40,16 +40,16 @@ export async function currentUser(): Promise<User | null> {
 const escapeLike = (v: string) => v.replace(/[\\%_]/g, (c) => `\\${c}`);
 
 /**
- * Attaches briefs sent before the account existed (same email, no owner yet) to this account.
+ * Attaches briefs and shop purchases made before the account existed (same email, no owner yet) to this account.
  * Only for a confirmed email, so nobody can claim someone else's projects by signing up with their address.
  */
 export async function claimOrders(user: User) {
   if (!user.email || !user.email_confirmed_at) return;
-  await db()
-    .from("orders")
-    .update({ user_id: user.id })
-    .is("user_id", null)
-    .ilike("email", escapeLike(user.email));
+  const email = escapeLike(user.email);
+  await Promise.all([
+    db().from("orders").update({ user_id: user.id }).is("user_id", null).ilike("email", email),
+    db().from("purchases").update({ user_id: user.id }).is("user_id", null).ilike("email", email),
+  ]);
 }
 
 /** Where to send someone after signing in: only paths on this site. */

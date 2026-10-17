@@ -3,6 +3,7 @@ import type Stripe from "stripe";
 import { formatMoney } from "@/lib/format";
 import { adminOrderLink, notifyDiscord, orderLink, sendEmail } from "@/lib/notify";
 import { addMessage } from "@/lib/orders";
+import { recordShopSession } from "@/lib/shop";
 import { stripe } from "@/lib/stripe";
 import { db } from "@/lib/supabase";
 
@@ -23,6 +24,10 @@ export async function POST(req: Request) {
 
   if (event.type === "checkout.session.completed" || event.type === "checkout.session.async_payment_succeeded") {
     const session = event.data.object as Stripe.Checkout.Session;
+    if (session.metadata?.kind === "shop") {
+      await recordShopSession(session);
+      return NextResponse.json({ received: true });
+    }
     const orderId = session.metadata?.order_id;
     if (orderId && session.payment_status === "paid") {
       const { data: order } = await db()

@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import { z } from "zod";
 import { adminEmail, adminOrderLink, notifyDiscord, sendEmail } from "@/lib/notify";
-import { addMessage, getAttachments, getMessages, getOrderForViewer } from "@/lib/orders";
+import { addMessage, getOrderForViewer, loadClientState } from "@/lib/orders";
 import { db } from "@/lib/supabase";
 
 export const runtime = "nodejs";
@@ -15,8 +15,7 @@ export async function GET(_req: Request, { params }: Ctx) {
   if (access.status === "login") return NextResponse.json({ error: "Sign in to see this project." }, { status: 401 });
   if (access.status !== "ok") return NextResponse.json({ error: "Not found." }, { status: 404 });
   const { order } = access;
-  const [messages, attachments] = await Promise.all([getMessages(order.id), getAttachments(order.id)]);
-  return NextResponse.json({ order, messages, attachments });
+  return NextResponse.json(await loadClientState(order, token));
 }
 
 const messageSchema = z.object({ body: z.string().trim().min(1).max(4000) });

@@ -4,6 +4,7 @@ import Link from "next/link";
 import { useCallback, useState } from "react";
 import { site } from "@/lib/config";
 import { formatDate, formatMoney, formatSize } from "@/lib/format";
+import { uploadInChunks } from "@/lib/upload-client";
 import { statusFlow, statusLabels, type OrderState } from "@/lib/types";
 import { Chat } from "./Chat";
 import { Icon } from "./Icon";
@@ -48,6 +49,21 @@ export function OrderRoom({ token, initial, justPaid, signedIn }: Props) {
     }
     await refresh();
     return null;
+  }
+
+  async function attach(file: File, onProgress: (f: number) => void) {
+    try {
+      await uploadInChunks(
+        file,
+        { url: `/api/orders/${token}/files`, body: { chat: true } },
+        (id) => `/api/upload/order/${token}/${id}`,
+        onProgress,
+      );
+      await refresh();
+      return null;
+    } catch (err) {
+      return err instanceof Error ? err.message : "Could not send the file.";
+    }
   }
 
   async function pay() {
@@ -118,7 +134,7 @@ export function OrderRoom({ token, initial, justPaid, signedIn }: Props) {
       )}
 
       <div className="room">
-        <Chat messages={messages} me="client" onSend={send} placeholder="Ask a question or add details" />
+        <Chat messages={messages} me="client" onSend={send} onAttach={attach} placeholder="Ask a question or add details" />
 
         <aside className="room__side">
           {order.status === "quoted" && order.quote_amount ? (
@@ -202,7 +218,7 @@ export function OrderRoom({ token, initial, justPaid, signedIn }: Props) {
               ) : null}
               {attachments.length > 0 ? (
                 <div>
-                  <dt>Files you sent</dt>
+                  <dt>Files</dt>
                   <dd>
                     <ul className="attach">
                       {attachments.map((a) => (
@@ -213,6 +229,7 @@ export function OrderRoom({ token, initial, justPaid, signedIn }: Props) {
                               href={a.url}
                               style={{ overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}
                             >
+                              {a.sender === "admin" ? "From timy.: " : ""}
                               {a.filename}
                             </a>
                           ) : (

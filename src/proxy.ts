@@ -24,6 +24,8 @@ export async function proxy(request: NextRequest) {
 }
 
 export const config = {
-  // skip static files, media and the Stripe webhook
-  matcher: ["/((?!_next/static|_next/image|images/|video/|portfolio/|apple-icon|api/stripe|api/page-view|favicon|icon|og\\.jpg|robots|sitemap).*)"],
+  // skip static files, media, the Stripe webhook and file uploads (the proxy would cut bodies over 10 MB)
+  matcher: [
+    "/((?!_next/static|_next/image|images/|video/|portfolio/|apple-icon|api/stripe|api/page-view|api/upload|api/shop/thumb|favicon|icon|og\\.jpg|robots|sitemap).*)",
+  ],
 };

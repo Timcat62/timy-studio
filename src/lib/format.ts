@@ -4,7 +4,8 @@ export function formatMoney(cents: number, currency = "eur") {
 
 export function formatSize(bytes: number) {
   if (bytes < 1024 * 1024) return `${Math.max(1, Math.round(bytes / 1024))} KB`;
-  return `${(bytes / 1024 / 1024).toFixed(1)} MB`;
+  if (bytes < 1024 * 1024 * 1024) return `${(bytes / 1024 / 1024).toFixed(1)} MB`;
+  return `${+(bytes / 1024 / 1024 / 1024).toFixed(1)} GB`;
 }
 
 export function formatDate(iso: string) {

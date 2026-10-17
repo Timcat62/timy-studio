@@ -1,12 +1,10 @@
-import { randomUUID } from "node:crypto";
 import { NextResponse } from "next/server";
 import { z } from "zod";
 import { currentUser } from "@/lib/auth";
 import { budgets, maxFileSizeMB, maxFiles, projectTypes } from "@/lib/config";
-import { safeFilename } from "@/lib/format";
 import { adminEmail, adminOrderLink, notifyDiscord, orderLink, sendEmail } from "@/lib/notify";
 import { addMessage } from "@/lib/orders";
-import { BUCKET, db } from "@/lib/supabase";
+import { db } from "@/lib/supabase";
 
 export const runtime = "nodejs";
 
@@ -92,25 +90,6 @@ export async function POST(req: Request) {
     return NextResponse.json({ error: "Could not save your brief. Please try again." }, { status: 500 });
   }
 
-  // Signed upload URLs so files go straight to storage (no size limit from the web server).
-  const uploads: { index: number; path: string; token: string }[] = [];
-  for (const [index, file] of data.files.entries()) {
-    const path = `${order.id}/${randomUUID()}-${safeFilename(file.name)}`;
-    const { data: signed, error: signErr } = await supabase.storage.from(BUCKET).createSignedUploadUrl(path);
-    if (signErr || !signed) {
-      console.error("Signed upload failed", signErr);
-      continue;
-    }
-    uploads.push({ index, path, token: signed.token });
-    await supabase.from("attachments").insert({
-      order_id: order.id,
-      path,
-      filename: file.name,
-      size: file.size,
-      content_type: file.type || null,
-    });
-  }
-
   await addMessage(
     order.id,
     "system",
@@ -135,5 +114,5 @@ export async function POST(req: Request) {
     ),
   ]);
 
-  return NextResponse.json({ token: order.token, uploads });
+  return NextResponse.json({ token: order.token });
 }

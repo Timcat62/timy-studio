@@ -4,6 +4,20 @@
  */
 export const updates: { version: string; date: string; title: string; changes: string[] }[] = [
   {
+    version: "1.5",
+    date: "2026-10-17",
+    title: "Shop, files in the chat",
+    changes: [
+      "New shop: Blender project files, models and more, to buy or get for free and download right away.",
+      "Send files in the project chat, up to 4 GB each, and download everything from your project page.",
+      "Your account sits in a bubble next to the menu bar, and phones get a proper menu.",
+      "Screenshots of each step next to “How working with me works”, following the scroll.",
+      "Glass that bends what's behind its edges, like a real lens.",
+      "Questions in the FAQ open and close smoothly.",
+      "A longer portfolio, Instagram links next to YouTube and TikTok, and a lighter footer.",
+    ],
+  },
+  {
     version: "1.4",
     date: "2026-10-17",
     title: "Portfolio you can watch here",

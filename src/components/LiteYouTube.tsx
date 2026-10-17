@@ -52,7 +52,6 @@ export function LiteYouTube({ id, title, url, index, poster }: Props) {
         )}
       </div>
       <div className="yt__cap">
-        <span className="yt__num">{String(index + 1).padStart(2, "0")}</span>
         <a className="yt__title" href={url} target="_blank" rel="noopener noreferrer" title="Open on YouTube">
           {title}
         </a>

@@ -9,10 +9,9 @@ export const metadata: Metadata = { title: "Legal and terms" };
 const lastUpdate = {
   date: "17 October 2026",
   changes: [
-    "Client accounts: sign in with Google or with an email and password, and set a name and profile photo.",
-    "Projects linked to an account can only be opened by that account.",
-    "New sections on cookies, visit statistics and the services that handle your data.",
-    "Clearer right of withdrawal, and the publisher and hosting details.",
+    "New shop terms: digital files, instant access and the right of withdrawal.",
+    "The files you send, and the files I deliver or sell, are now stored on my own server in France.",
+    "Files can be sent in the project chat.",
   ],
 };
 
@@ -50,8 +49,9 @@ export default function Legal() {
             </p>
             <p>
               <strong>Hosting.</strong> The site runs on a server operated by the publisher, in France (contact details
-              above). The project database and the files you send are stored by Supabase, Inc. (supabase.com), and
-              payments are handled by Stripe Payments Europe, Ltd. (stripe.com).
+              above). Files sent through the site (briefs, chat, deliveries, shop downloads) are stored on that server.
+              The project database and accounts are hosted by Supabase, Inc. (supabase.com), and payments are handled
+              by Stripe Payments Europe, Ltd. (stripe.com).
             </p>
 
             <h2 id="terms">Terms of service</h2>
@@ -81,6 +81,29 @@ export default function Legal() {
               applies (French Consumer Code, articles L221-25 and L221-28). Before production starts, you can always
               cancel for a full refund.
             </p>
+
+            <h2 id="shop">Shop</h2>
+            <p>
+              <strong>What you buy.</strong> The shop sells digital files (Blender project files, 3D models and other
+              assets), described on each product page. Prices are in euros. {legal.vat}
+              You pay through Stripe, which emails you a receipt and an invoice. Free products need an account.
+            </p>
+            <p>
+              <strong>Access.</strong> Right after payment you get a download page, also sent by email and listed in your
+              account if you have one. You can download the files again whenever you need.
+            </p>
+            <p>
+              <strong>Right of withdrawal.</strong> These files are digital content delivered immediately. Before paying,
+              you ask for immediate access and acknowledge that you then lose your 14-day right of withdrawal (French
+              Consumer Code, article L221-28, 13°). If a file is broken or doesn&apos;t match its description, write to
+              me and I will fix it or refund you.
+            </p>
+            <p>
+              <strong>Licence.</strong> Unless the product page says otherwise, you may use the files in your own
+              personal and commercial projects (renders, videos, images). You may not resell, share or redistribute the
+              files themselves, alone or in a pack.
+            </p>
+
             <p>
               <strong>Disputes.</strong> Write to me first and we will find a solution.
               {legal.mediator
@@ -92,15 +115,17 @@ export default function Legal() {
             <h2 id="privacy">Privacy</h2>
             <p>
               <strong>What I keep and why.</strong> Your name, email, brief, files and messages, only to handle your
-              project and keep a record of it. If you create an account, your email, an encrypted password (or your
+              project and keep a record of it. For shop purchases, your email and what you bought, so you can download
+              it again. If you create an account, your email, an encrypted password (or your
               Google sign-in), and the name and profile photo you choose, so you can find your projects again. Profile
               photos are stored at an unlisted address and stripped of their metadata (such as location). Everything is
               kept for 3 years after our last exchange, except invoices, which the law requires to be kept for 10 years.
               Your data is never sold or shared for advertising.
             </p>
             <p>
-              <strong>Who handles it.</strong> Supabase stores the data and files, Stripe processes payments (I never
-              see your card details), and Resend sends the emails about your project.
+              <strong>Who handles it.</strong> Your files stay on my own server in France. Supabase stores the project
+              data and accounts, Stripe processes payments (I never see your card details), and Resend sends the emails
+              about your project or purchase.
             </p>
             <p>
               <strong>Visit statistics.</strong> To know which pages are read, the server notes the page, the

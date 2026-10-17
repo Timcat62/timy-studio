@@ -10,7 +10,12 @@ export const metadata: Metadata = {
   description: "A selection of my 3D car animations, made in Blender.",
 };
 
-const youtube = links.find((l) => l.label === "YouTube")?.href ?? "";
+const social = (label: string) => links.find((l) => l.label === label)?.href ?? "";
+const elsewhere = [
+  { label: "YouTube", href: social("YouTube") },
+  { label: "TikTok", href: social("TikTok") },
+  { label: "Instagram", href: social("Instagram") },
+].filter((l) => l.href);
 
 export default function Portfolio() {
   const items = getPortfolio();
@@ -29,11 +34,12 @@ export default function Portfolio() {
             ))}
           </div>
           <p className="work-more">
-            {youtube ? (
-              <a className="link-arrow" href={youtube} target="_blank" rel="noopener noreferrer" style={{ marginRight: "1.5rem" }}>
-                More on YouTube <Icon name="arrow-up-right" />
+            {elsewhere.map((l, i) => (
+              <a key={l.label} className="link-arrow" href={l.href} target="_blank" rel="noopener noreferrer" style={{ marginRight: "1.5rem" }}>
+                {i === 0 ? "More on " : i === elsewhere.length - 1 ? "and " : ""}
+                {l.label} <Icon name="arrow-up-right" />
               </a>
-            ) : null}
+            ))}
             <Link href="/start" className="link-arrow">
               Work with me <Icon name="arrow" />
             </Link>

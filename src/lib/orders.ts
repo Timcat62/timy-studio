@@ -1,5 +1,5 @@
 import { currentUser } from "./auth";
-import { BUCKET, db } from "./supabase";
+import { db } from "./supabase";
 import type { AdminOrder, AdminOrderState, Attachment, Message, PublicOrder, Sender } from "./types";
 
 export const PUBLIC_COLUMNS =
@@ -33,29 +33,39 @@ export async function getOrderForViewer(token: string): Promise<OrderAccess> {
   return user.id === owner ? { status: "ok", order } : { status: "missing" };
 }
 
-export async function getMessages(orderId: string): Promise<Message[]> {
+/** Messages of a project. Files sent in the chat are attached from `attachments` (see getAttachments). */
+export async function getMessages(orderId: string, attachments: Attachment[] = []): Promise<Message[]> {
   const { data } = await db()
     .from("messages")
-    .select("id,sender,body,created_at")
+    .select("id,sender,body,created_at,attachment_id")
     .eq("order_id", orderId)
     .order("created_at", { ascending: true })
     .limit(500);
-  return (data as Message[] | null) ?? [];
+  const byId = new Map(attachments.map((a) => [a.id, a]));
+  return ((data ?? []) as (Message & { attachment_id: string | null })[]).map(({ attachment_id, ...m }) => ({
+    ...m,
+    attachment: attachment_id ? (byId.get(attachment_id) ?? null) : null,
+  }));
 }
 
-/** The files of a project, each with a download link valid for one hour. Call only after checking access. */
-export async function getAttachments(orderId: string): Promise<Attachment[]> {
-  const { data: rows } = await db()
+/**
+ * The finished files of a project. `urlBase` is the download route for this viewer
+ * (/api/orders/<token>/files for the client, /api/admin/orders/<id>/files for me): it checks access again.
+ */
+export async function getAttachments(orderId: string, urlBase: string): Promise<Attachment[]> {
+  const { data } = await db()
     .from("attachments")
-    .select("id,filename,size,content_type,path")
+    .select("id,filename,size,content_type,sender")
     .eq("order_id", orderId)
+    .eq("complete", true)
     .order("created_at", { ascending: true });
-  return Promise.all(
-    (rows ?? []).map(async (r) => {
-      const { data } = await db().storage.from(BUCKET).createSignedUrl(r.path, 3600, { download: r.filename });
-      return { id: r.id, filename: r.filename, size: r.size, content_type: r.content_type, url: data?.signedUrl };
-    }),
-  );
+  return ((data ?? []) as Attachment[]).map((a) => ({ ...a, url: `${urlBase}/${a.id}` }));
+}
+
+/** Everything the client's project page shows. Call only after getOrderForViewer said ok. */
+export async function loadClientState(order: PublicOrder, token: string) {
+  const attachments = await getAttachments(order.id, `/api/orders/${token}/files`);
+  return { order, attachments, messages: await getMessages(order.id, attachments) };
 }
 
 export async function addMessage(orderId: string, sender: Sender, body: string) {
@@ -66,11 +76,11 @@ export async function addMessage(orderId: string, sender: Sender, body: string) 
 const ADMIN_COLUMNS =
   "id,token,name,email,project_type,budget,description,deadline,links,status,quote_amount,quote_currency,quote_note,paid_at,created_at,stripe_session_id";
 
-/** Full order for the admin: includes the client's email and signed download links for their files. */
+/** Full order for the admin: includes the client's email and the files. */
 export async function loadAdminState(id: string): Promise<AdminOrderState | null> {
   if (!isUuid(id)) return null;
   const { data: order } = await db().from("orders").select(ADMIN_COLUMNS).eq("id", id).maybeSingle();
   if (!order) return null;
-  const [messages, attachments] = await Promise.all([getMessages(id), getAttachments(id)]);
-  return { order: order as AdminOrder, messages, attachments };
+  const attachments = await getAttachments(id, `/api/admin/orders/${id}/files`);
+  return { order: order as AdminOrder, messages: await getMessages(id, attachments), attachments };
 }

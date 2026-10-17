@@ -14,6 +14,8 @@ export interface Message {
   sender: Sender;
   body: string;
   created_at: string;
+  /** A file sent in the chat with this message. */
+  attachment?: Attachment | null;
 }
 
 export interface Attachment {
@@ -21,7 +23,8 @@ export interface Attachment {
   filename: string;
   size: number;
   content_type: string | null;
-  url?: string; // signed download URL (admin only)
+  sender?: Sender;
+  url?: string; // download link, checked against the viewer's access
 }
 
 /** What the client is allowed to see about their own order. */

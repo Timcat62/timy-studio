@@ -2,7 +2,6 @@ import { PageViewTracker } from "@/components/PageViewTracker";
 import "@fontsource-variable/archivo/wdth.css";
 import "./globals.css";
 import type { Metadata, Viewport } from "next";
-import { AccountButton } from "@/components/AccountButton";
 import { Footer } from "@/components/Footer";
 import { LiquidGlass } from "@/components/LiquidGlass";
 import { Header } from "@/components/Header";
@@ -38,7 +37,6 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <Header />
         <main>{children}</main>
         <Footer />
-        <AccountButton />
       </body>
     </html>
   );

@@ -1,11 +1,11 @@
 "use client";
 
-import { createClient } from "@supabase/supabase-js";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { useMemo, useRef, useState } from "react";
+import { useRef, useState } from "react";
 import { budgets, projectTypes } from "@/lib/config";
 import { formatSize } from "@/lib/format";
+import { uploadInChunks } from "@/lib/upload-client";
 import { Icon } from "./Icon";
 
 interface Props {
@@ -30,18 +30,12 @@ export function BriefForm({ maxFiles, maxFileSizeMB, defaultType, account }: Pro
   const [error, setError] = useState("");
   const [partial, setPartial] = useState<{ token: string; failed: number } | null>(null);
 
-  const supabase = useMemo(() => {
-    const url = process.env.NEXT_PUBLIC_SUPABASE_URL;
-    const key = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
-    return url && key ? createClient(url, key, { auth: { persistSession: false } }) : null;
-  }, []);
-
   function addFiles(list: FileList | File[]) {
     setError("");
     const incoming = Array.from(list);
     const tooBig = incoming.find((f) => f.size > maxFileSizeMB * 1024 * 1024);
     if (tooBig) {
-      setError(`"${tooBig.name}" is over ${maxFileSizeMB} MB. Share large files by link in your description instead.`);
+      setError(`"${tooBig.name}" is over ${formatSize(maxFileSizeMB * 1024 * 1024)}. Share it by link in your description instead.`);
       return;
     }
     const merged = [...files, ...incoming];
@@ -64,10 +58,6 @@ export function BriefForm({ maxFiles, maxFileSizeMB, defaultType, account }: Pro
       setError("Please describe the project in at least a couple of sentences.");
       return;
     }
-    if (files.length > 0 && !supabase) {
-      setError("File uploads aren't available right now. Remove the files and share a link in your description.");
-      return;
-    }
 
     setPhase("sending");
     try {
@@ -88,27 +78,32 @@ export function BriefForm({ maxFiles, maxFileSizeMB, defaultType, account }: Pro
           files: files.map((f) => ({ name: f.name, size: f.size, type: f.type })),
         }),
       });
-      const data = (await res.json()) as {
-        error?: string;
-        token?: string;
-        uploads?: { index: number; path: string; token: string }[];
-      };
+      const data = (await res.json()) as { error?: string; token?: string };
       if (!res.ok || !data.token) {
         setError(data.error ?? "Something went wrong. Please try again.");
         setPhase("idle");
         return;
       }
 
-      let failed = files.length - (data.uploads?.length ?? 0);
-      if (data.uploads?.length && supabase) {
+      // files go to the project folder on my server, in chunks, one after the other
+      let failed = 0;
+      if (files.length) {
         setPhase("uploading");
-        let done = 0;
-        for (const u of data.uploads) {
-          const file = files[u.index];
-          const { error: upErr } = await supabase.storage.from("briefs").uploadToSignedUrl(u.path, u.token, file);
-          if (upErr) failed += 1;
-          done += 1;
-          setProgress(Math.round((done / data.uploads.length) * 100));
+        const token = data.token;
+        const total = files.reduce((n, f) => n + f.size, 0) || 1;
+        let sent = 0;
+        for (const file of files) {
+          try {
+            await uploadInChunks(
+              file,
+              { url: `/api/orders/${token}/files` },
+              (id) => `/api/upload/order/${token}/${id}`,
+              (f) => setProgress(Math.round(((sent + f * file.size) / total) * 100)),
+            );
+          } catch {
+            failed += 1;
+          }
+          sent += file.size;
         }
       }
 
@@ -240,8 +235,8 @@ export function BriefForm({ maxFiles, maxFileSizeMB, defaultType, account }: Pro
           }}
         >
           <p className="hint">
-            Car models, logos, references, audio. Up to {maxFiles} files, {maxFileSizeMB} MB each. For anything bigger,
-            share a link in the box above.
+            Car models, logos, references, audio. Up to {maxFiles} files, {formatSize(maxFileSizeMB * 1024 * 1024)} each. You
+            can send more later in the project chat.
           </p>
           <button type="button" className="btn btn--ghost btn--small drop__pick" onClick={() => picker.current?.click()} disabled={busy}>
             <Icon name="paperclip" /> Add files
